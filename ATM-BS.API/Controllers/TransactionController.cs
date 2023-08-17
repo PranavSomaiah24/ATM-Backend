@@ -11,10 +11,12 @@ namespace ATM_BS.API.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService transactionService;
+        private readonly IBalanceService balanceService;
 
-        public TransactionController(ITransactionService transactionService)
+        public TransactionController(ITransactionService transactionService, IBalanceService balanceService)
         {
             this.transactionService = transactionService;
+            this.balanceService = balanceService;
         }
 
         [HttpPost,Route("AddTransaction")]
@@ -30,7 +32,10 @@ namespace ATM_BS.API.Controllers
                     CardNumber = transactionDTO.CardNumber,
                     Amount = transactionDTO.Amount,
                 };
+                Balance balance = balanceService.GetBalance(transactionDTO.AccountNumber);
                 transactionService.AddTransaction(transaction);
+                balance.AccountBalance -= transactionDTO.Amount;
+                balanceService.EditBalance(balance);
                 return StatusCode(200, transactionDTO);
             }
             catch (Exception) { throw; }
