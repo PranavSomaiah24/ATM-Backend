@@ -12,10 +12,12 @@ namespace ATM_BS.API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService customerService;
+        private readonly IBalanceService balanceService;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, IBalanceService balanceService)
         {
             this.customerService = customerService; 
+            this.balanceService = balanceService;
         }
 
         [HttpPost,Route("AddCustomer")]
@@ -36,7 +38,15 @@ namespace ATM_BS.API.Controllers
                     Contact = customerDTO.Contact,
                 };
 
+                Balance balance = new Balance()
+                {
+                    AccountBalance = 3000,
+                    AccountNumber = customer.AccountNumber,
+                };
+
                 customerService.AddCustomer(customer);
+                balanceService.AddBalance(balance);
+
                 return StatusCode(200, customerDTO);
 
             }
@@ -52,7 +62,8 @@ namespace ATM_BS.API.Controllers
             try
             {
                 Customer customer = customerService.GetCustomer(id);
-                CustomerDTO customerDTO = new CustomerDTO()
+                Balance balance = balanceService.GetBalance(customer.AccountNumber);
+                CustomerAndBalanceDTO customerDTO = new CustomerAndBalanceDTO()
                 {
                     CustomerID = customer.CustomerId,
                     CustomerName = customer.CustomerName,
@@ -62,6 +73,7 @@ namespace ATM_BS.API.Controllers
                     Email = customer.Email,
                     Contact = customer.Contact,
                     AccountNumber = customer.AccountNumber,
+                    AccountBalance = balance.AccountBalance
                 };
                 return StatusCode(200, customerDTO);
             }
