@@ -80,6 +80,18 @@ namespace ATM_BS.API.Controllers
             catch(Exception) { throw; }
         }
 
+        [HttpGet, Route("DeleteCustomer/{id}"), Authorize]
+        public IActionResult DeleteCustomer(int id)
+        {
+            try
+            {
+                Customer customer = customerService.GetCustomer(id);
+                customerService.DeleteCustomer(customer);
+                return StatusCode(200);
+            }
+            catch (Exception) { throw; }
+        }
+
         [HttpPut,Route("EditCustomer")]
         public IActionResult EditCustomer(CustomerDTO customerDTO)
         {

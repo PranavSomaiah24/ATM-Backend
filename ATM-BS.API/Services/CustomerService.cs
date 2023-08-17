@@ -18,6 +18,12 @@ namespace ATM_BS.API.Service
             _dbcontext.SaveChanges();
         }
 
+        public void DeleteCustomer(Customer customer)
+        {
+            _dbcontext.Customers.Remove(customer);
+            _dbcontext.SaveChanges();
+        }
+
         public void EditCustomer(Customer customer)
         {
             _dbcontext.Customers.Update(customer);
