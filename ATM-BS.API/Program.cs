@@ -32,7 +32,7 @@ namespace ATM_BS.API
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("*").AllowAnyHeader();
+                                      policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
 
