@@ -33,14 +33,14 @@ namespace ATM_BS.API.Controllers
         public IActionResult Auth([FromBody] AuthRequest request)
         {
             AuthResponse authResponse = null;
-            Admin? user = userService.Validate(request.UserName, request.Password);
+            Admin? user = userService.Validate(request.Email, request.Password);
 
             if (user != null)
             {
                 string jwtToken = GetToken(user);
                 authResponse = new AuthResponse()
                 {
-                    UserName = user.Name,
+                    Email = user.Email,
                     Token = jwtToken
 
                 };
@@ -60,6 +60,8 @@ namespace ATM_BS.API.Controllers
                 Admin admin = new Admin()
                 {
                     Id = adminDTO.Id,
+                    Name = adminDTO.Name,
+                    Email = adminDTO.Email,
                     Password = adminDTO.Password
 
                 };
@@ -85,7 +87,7 @@ namespace ATM_BS.API.Controllers
 
             var subject = new ClaimsIdentity(new[]
             {
-                        new Claim(ClaimTypes.Name,user.Name)
+                        new Claim(ClaimTypes.Email,user.Email)
                     });
 
             var expires = DateTime.UtcNow.AddMinutes(10); //expire time
