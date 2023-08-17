@@ -1,5 +1,7 @@
-﻿using ATM_BS.API.Entities;
+﻿using ATM_BS.API.DTOS;
+using ATM_BS.API.Entities;
 using ATM_BS.API.Models;
+using ATM_BS.API.Service;
 using ATM_BS.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,11 +19,13 @@ namespace ATM_BS.API.Controllers
     {
         IConfiguration configuration;
         private readonly IUserService userService;
+        private readonly IAdminService adminService;
 
-        public AuthController(IConfiguration configuration, IUserService userService)
+        public AuthController(IConfiguration configuration, IUserService userService, IAdminService adminService)
         {
             this.configuration = configuration;
             this.userService = userService;
+            this.adminService = adminService;
         }
 
         [AllowAnonymous]
@@ -45,6 +49,28 @@ namespace ATM_BS.API.Controllers
             }
 
             return StatusCode(200, authResponse);
+        }
+
+        [HttpPost, Route("AddAdmin")]
+        public IActionResult Add(AdminDTO adminDTO)
+        {
+            Console.WriteLine(adminDTO);
+            try
+            {
+                Admin admin = new Admin()
+                {
+                    Id = adminDTO.Id,
+                    Password = adminDTO.Password
+
+                };
+                adminService.AddAdmin(admin);
+                return StatusCode(200, adminDTO);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private string GetToken(Admin? user)
