@@ -10,7 +10,7 @@ namespace ATM_BS.API.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)] //disable identity
         public int Id { get; set; }
 
-        [Required] //applies not null constraint
+        //[Required] //applies not null constraint
         [Column(TypeName = "varchar")]
         [StringLength(50)]
         public string Name { get; set; }
