@@ -20,7 +20,7 @@ namespace ATM_BS.API.Controllers
             this.balanceService = balanceService;
         }
 
-        [HttpPost,Route("AddCustomer")]
+        [HttpPost,Route("AddCustomer"),Authorize]
         public IActionResult Add(CustomerDTO customerDTO)
         {
             Console.WriteLine(customerDTO);
@@ -92,7 +92,7 @@ namespace ATM_BS.API.Controllers
             catch (Exception) { throw; }
         }
 
-        [HttpPut,Route("EditCustomer")]
+        [HttpPut,Route("EditCustomer"),Authorize]
         public IActionResult EditCustomer(CustomerDTO customerDTO)
         {
             try
