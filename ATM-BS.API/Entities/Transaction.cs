@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ATM_BS.API.Entities
 {
+    [Keyless]
     public class Transaction
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)] //disable identity
+        [Required]
         public int AccountNumber { get; set; }
         [Required]
         [Column(TypeName = "varchar")]
