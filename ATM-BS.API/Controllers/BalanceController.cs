@@ -11,6 +11,8 @@ namespace ATM_BS.API.Controllers
     public class BalanceController : ControllerBase
     {
         private readonly IBalanceService balanceService;
+        private readonly ITransactionService transactionService;
+        private readonly IMapper _mapper;
 
         public BalanceController(IBalanceService balanceService, ITransactionService transactionService)
         {
