@@ -4,6 +4,7 @@ using ATM_BS.API.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace ATM_BS.API.Controllers
 {
@@ -13,20 +14,24 @@ namespace ATM_BS.API.Controllers
     {
         private readonly ICustomerService customerService;
         private readonly IBalanceService balanceService;
+        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService, IBalanceService balanceService)
+        public CustomerController(ICustomerService customerService, IBalanceService balanceService, IMapper mapper)
         {
             this.customerService = customerService; 
             this.balanceService = balanceService;
+            this._mapper = mapper;
+
         }
 
         [HttpPost,Route("AddCustomer"),Authorize]
         public IActionResult Add(CustomerDTO customerDTO)
         {
             Console.WriteLine(customerDTO);
+            System.Diagnostics.Debug.WriteLine(customerDTO);
             try
             {
-                Customer customer = new Customer()
+                /* Customer customer = new Customer()
                 {
                     CustomerId = customerDTO.CustomerID,
                     CustomerName = customerDTO.CustomerName,
@@ -36,18 +41,19 @@ namespace ATM_BS.API.Controllers
                     Pincode = customerDTO.Pincode,
                     Email = customerDTO.Email,
                     Contact = customerDTO.Contact,
-                };
+                }; */
+
+                Customer customer = _mapper.Map<Customer>(customerDTO);
+                customerService.AddCustomer(customer);
 
                 Balance balance = new Balance()
                 {
                     AccountBalance = 3000,
                     AccountNumber = customer.AccountNumber,
                 };
-
-                customerService.AddCustomer(customer);
                 balanceService.AddBalance(balance);
-
                 return StatusCode(200, customerDTO);
+                
 
             }
             catch (Exception)
@@ -63,18 +69,21 @@ namespace ATM_BS.API.Controllers
             {
                 Customer customer = customerService.GetCustomer(id);
                 Balance balance = balanceService.GetBalance(customer.AccountNumber);
-                CustomerAndBalanceDTO customerDTO = new CustomerAndBalanceDTO()
-                {
-                    CustomerID = customer.CustomerId,
-                    CustomerName = customer.CustomerName,
-                    AccountType = customer.AccountType,
-                    Address = customer.Address,
-                    Pincode = customer.Pincode,
-                    Email = customer.Email,
-                    Contact = customer.Contact,
-                    AccountNumber = customer.AccountNumber,
-                    AccountBalance = balance.AccountBalance
-                };
+                /* CustomerAndBalanceDTO customerDTO = new CustomerAndBalanceDTO()
+                 {
+                     CustomerID = customer.CustomerId,
+                     CustomerName = customer.CustomerName,
+                     AccountType = customer.AccountType,
+                     Address = customer.Address,
+                     Pincode = customer.Pincode,
+                     Email = customer.Email,
+                     Contact = customer.Contact,
+                     AccountNumber = customer.AccountNumber,
+                     AccountBalance = balance.AccountBalance
+                 }; */
+                
+                CustomerDTO customerDTO = _mapper.Map<CustomerDTO>(customer);
+                BalanceDTO balanceDTO = _mapper.Map<BalanceDTO>(balance);
                 return StatusCode(200, customerDTO);
             }
             catch(Exception) { throw; }
@@ -97,7 +106,7 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
-                Customer customer = new Customer()
+                /* Customer customer = new Customer()
                 {
                     CustomerId = customerDTO.CustomerID,
                     CustomerName = customerDTO.CustomerName,
@@ -107,7 +116,9 @@ namespace ATM_BS.API.Controllers
                     Email = customerDTO.Email,
                     Contact = customerDTO.Contact,
                     AccountNumber = customerDTO.AccountNumber,
-                };
+                }; */
+                Customer customer = _mapper.Map<Customer>(customerDTO);
+
                 customerService.EditCustomer(customer);
                 return StatusCode(200, customerDTO);
             }
