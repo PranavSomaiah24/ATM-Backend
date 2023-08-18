@@ -64,5 +64,18 @@ namespace ATM_BS.API.Controllers
             }
             catch(Exception) { throw; }
         }
+
+        [HttpPut,Route("ChequeDeposit"),Authorize]
+        public IActionResult ChequeDeposit(DepositDTO depositDTO)
+        {
+            try
+            {
+                Balance balance = balanceService.GetBalance(depositDTO.AccountNumber);
+                balance.AccountBalance += depositDTO.Amount;
+                balanceService.EditBalance(balance);
+                return StatusCode(200, balance);
+            }
+            catch(Exception) { throw; }
+        }
     }
 }
