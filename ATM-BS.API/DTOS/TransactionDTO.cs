@@ -13,7 +13,8 @@ namespace ATM_BS.API.DTOS
         public int CardNumber { get; set; }
         [Required(ErrorMessage = "Region cannot be empty")]
         public string Region { get; set; }
-        [Required(ErrorMessage = "Amount must be positive")]
+        [Required(ErrorMessage = "Amount cannot be empty")]
+        [Range(0, int.MaxValue, ErrorMessage = "Amount must be positive")]
         public double Amount { get; set; }
     }
 }
