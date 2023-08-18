@@ -20,7 +20,7 @@ namespace ATM_BS.API.Controllers
             this.balanceService = balanceService;
         }
 
-        [HttpPost,Route("AddTransaction"),Authorize]
+        [HttpPost,Route("AddTransaction")]
         public IActionResult AddTransaction(TransactionDTO transactionDTO)
         {
             try
@@ -35,6 +35,13 @@ namespace ATM_BS.API.Controllers
                 };
                 Balance balance = balanceService.GetBalance(transactionDTO.AccountNumber);
                 transactionService.AddTransaction(transaction);
+                double val = balance.AccountBalance;
+                
+                val -= transactionDTO.Amount;
+                if(val< 0)
+                {
+                    throw new Exception("Insufficent Balance!");
+                }
                 balance.AccountBalance -= transactionDTO.Amount;
                 balanceService.EditBalance(balance);
                 return StatusCode(200, transactionDTO);

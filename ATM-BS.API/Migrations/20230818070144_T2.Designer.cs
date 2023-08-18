@@ -4,6 +4,7 @@ using ATM_BS.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATM_BS.API.Migrations
 {
     [DbContext(typeof(ATMBSDbContext))]
-    partial class ATMBSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230818070144_T2")]
+    partial class T2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,6 +102,8 @@ namespace ATM_BS.API.Migrations
 
                     b.HasKey("CustomerId");
 
+                    b.HasIndex("AccountNumber");
+
                     b.ToTable("Customers");
                 });
 
@@ -123,6 +127,17 @@ namespace ATM_BS.API.Migrations
                         .HasColumnType("varchar");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ATM_BS.API.Entities.Customer", b =>
+                {
+                    b.HasOne("ATM_BS.API.Entities.Balance", "Balance")
+                        .WithMany()
+                        .HasForeignKey("AccountNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Balance");
                 });
 #pragma warning restore 612, 618
         }

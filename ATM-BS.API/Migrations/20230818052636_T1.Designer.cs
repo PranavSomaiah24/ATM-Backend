@@ -4,6 +4,7 @@ using ATM_BS.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATM_BS.API.Migrations
 {
     [DbContext(typeof(ATMBSDbContext))]
-    partial class ATMBSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230818052636_T1")]
+    partial class T1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,6 +83,9 @@ namespace ATM_BS.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<int?>("BalanceAccountNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("Contact")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -98,13 +103,24 @@ namespace ATM_BS.API.Migrations
                     b.Property<int>("Pincode")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("CustomerId");
+
+                    b.HasIndex("BalanceAccountNumber");
+
+                    b.HasIndex("TransactionId");
 
                     b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("ATM_BS.API.Entities.Transaction", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");
 
@@ -122,7 +138,24 @@ namespace ATM_BS.API.Migrations
                         .IsRequired()
                         .HasColumnType("varchar");
 
+                    b.HasKey("Id");
+
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ATM_BS.API.Entities.Customer", b =>
+                {
+                    b.HasOne("ATM_BS.API.Entities.Balance", "Balance")
+                        .WithMany()
+                        .HasForeignKey("BalanceAccountNumber");
+
+                    b.HasOne("ATM_BS.API.Entities.Transaction", "Transaction")
+                        .WithMany()
+                        .HasForeignKey("TransactionId");
+
+                    b.Navigation("Balance");
+
+                    b.Navigation("Transaction");
                 });
 #pragma warning restore 612, 618
         }

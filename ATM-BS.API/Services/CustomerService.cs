@@ -40,5 +40,7 @@ namespace ATM_BS.API.Service
             Customer customer = _dbcontext.Customers.Find(CustomerId);
             return customer;
         }
+
+
     }
 }
