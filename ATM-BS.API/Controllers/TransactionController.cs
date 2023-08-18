@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using ATM_BS.API.Service;
 using ATM_BS.API.DTOS;
 using ATM_BS.API.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ATM_BS.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace ATM_BS.API.Controllers
             this.balanceService = balanceService;
         }
 
-        [HttpPost,Route("AddTransaction")]
+        [HttpPost,Route("AddTransaction"),Authorize]
         public IActionResult AddTransaction(TransactionDTO transactionDTO)
         {
             try
@@ -41,7 +42,7 @@ namespace ATM_BS.API.Controllers
             catch (Exception) { throw; }
         }
 
-        [HttpGet, Route("GetTransactions/{AccountNumber}")]
+        [HttpGet, Route("GetTransactions/{AccountNumber}"),Authorize]
         public IActionResult GetTransactions(int AccountNumber)
         {
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
