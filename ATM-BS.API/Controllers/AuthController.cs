@@ -1,10 +1,8 @@
 ﻿using ATM_BS.API.DTOS;
 using ATM_BS.API.Entities;
 using ATM_BS.API.Models;
-using ATM_BS.API.Service;
 using ATM_BS.API.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
