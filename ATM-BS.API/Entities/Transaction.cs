@@ -10,14 +10,14 @@ namespace ATM_BS.API.Entities
         [Required]
         public int AccountNumber { get; set; }
         [Required]
-        [Column(TypeName = "varchar")]
+        [Column(TypeName = "varchar(50)")]
         public string Type { get; set; }
         [Required]
         public int CardNumber { get; set; }
         [Required]
         public DateTime TransactionTime { get; set; }
         [Required]
-        [Column(TypeName = "varchar")]
+        [Column(TypeName = "varchar(50)")]
         public string Region { get; set; }
         [Required]
         public double Amount;

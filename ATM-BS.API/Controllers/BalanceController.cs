@@ -12,10 +12,12 @@ namespace ATM_BS.API.Controllers
     {
         
         private readonly IBalanceService balanceService;
+        private readonly ITransactionService transactionService;
 
-        public BalanceController(IBalanceService balanceService)
+        public BalanceController(IBalanceService balanceService, ITransactionService transactionService)
         {
             this.balanceService = balanceService;
+            this.transactionService = transactionService;
         }
 
         [HttpPost,Route("AddBalance"),Authorize]
@@ -73,6 +75,16 @@ namespace ATM_BS.API.Controllers
                 Balance balance = balanceService.GetBalance(depositDTO.AccountNumber);
                 balance.AccountBalance += depositDTO.Amount;
                 balanceService.EditBalance(balance);
+                Transaction transaction = new Transaction()
+                {
+                    AccountNumber = depositDTO.AccountNumber,
+                    Type = "Deposit",
+                    CardNumber = 11111111,
+                    TransactionTime = DateTime.Now,
+                    Region = "IND",
+                    Amount = depositDTO.Amount
+                };
+                transactionService.AddTransaction(transaction);
                 return StatusCode(200, balance);
             }
             catch(Exception) { throw; }
