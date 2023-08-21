@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AutoMapper;
 
 namespace ATM_BS.API
 {
@@ -21,6 +22,8 @@ namespace ATM_BS.API
             builder.Services.AddTransient<ICustomerService, CustomerService>();
             builder.Services.AddTransient<ITransactionService, TransactionService>();
             builder.Services.AddTransient<IBalanceService, BalanceService>();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
