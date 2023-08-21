@@ -43,7 +43,10 @@ namespace ATM_BS.API.Controllers
                     Contact = customerDTO.Contact,
                 }; */
 
+                Random _rdm = new Random();
+
                 Customer customer = _mapper.Map<Customer>(customerDTO);
+                customer.AccountPin = _rdm.Next(1000, 9999);
                 customerService.AddCustomer(customer);
 
                 Balance balance = new Balance()
@@ -52,7 +55,8 @@ namespace ATM_BS.API.Controllers
                     AccountNumber = customer.AccountNumber,
                 };
                 balanceService.AddBalance(balance);
-                return StatusCode(200, customerDTO);
+
+                return StatusCode(200, customer);
                 
 
             }
@@ -123,6 +127,23 @@ namespace ATM_BS.API.Controllers
                 return StatusCode(200, customerDTO);
             }
             catch (Exception) { throw; }
+        }
+
+        [HttpPut,Route("ChangePin"),Authorize]
+        public IActionResult ChangePin(PinDTO pinDTO)
+        {
+            try
+            {
+                Customer customer = customerService.GetCustomer(pinDTO.CustomerId);
+                if(customer.AccountPin != pinDTO.OldAccountPin)
+                {
+                    throw new Exception("Old Account Pin does not match");
+                }
+                customer.AccountPin = pinDTO.NewAccountPin;
+                customerService.EditCustomer(customer);
+                return StatusCode(200, pinDTO);
+            }
+            catch(Exception) { throw; }
         }
     }
 }
