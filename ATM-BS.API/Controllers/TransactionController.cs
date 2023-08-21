@@ -4,6 +4,7 @@ using ATM_BS.API.Service;
 using ATM_BS.API.DTOS;
 using ATM_BS.API.Entities;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace ATM_BS.API.Controllers
 {
@@ -13,11 +14,13 @@ namespace ATM_BS.API.Controllers
     {
         private readonly ITransactionService transactionService;
         private readonly IBalanceService balanceService;
+        private readonly IMapper _mapper;
 
-        public TransactionController(ITransactionService transactionService, IBalanceService balanceService)
+        public TransactionController(ITransactionService transactionService, IBalanceService balanceService, IMapper mapper)
         {
             this.transactionService = transactionService;
             this.balanceService = balanceService;
+            this._mapper = mapper;
         }
 
         [HttpPost,Route("AddTransaction")]
@@ -25,16 +28,18 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
-                Transaction transaction = new Transaction()
+                 Transaction transaction = new Transaction()
                 {
                     AccountNumber = transactionDTO.AccountNumber,
                     Region = transactionDTO.Region,
                     Type = transactionDTO.Type,
                     CardNumber = transactionDTO.CardNumber,
                     Amount = transactionDTO.Amount,
-                };
-                Balance balance = balanceService.GetBalance(transactionDTO.AccountNumber);
+                }; 
+               // Transaction transaction = _mapper.Map<Transaction>(transactionDTO);
                 transactionService.AddTransaction(transaction);
+                Balance balance = balanceService.GetBalance(transactionDTO.AccountNumber);
+                
                 double val = balance.AccountBalance;
                 
                 val -= transactionDTO.Amount;

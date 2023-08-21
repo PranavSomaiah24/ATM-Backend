@@ -22,8 +22,6 @@ namespace ATM_BS.API.Controllers
             this._mapper = mapper;
         }
 
-        
-
         [HttpPost,Route("AddBalance"),Authorize]
         public IActionResult AddBalance(BalanceDTO balanceDTO) { 
             try
@@ -73,6 +71,10 @@ namespace ATM_BS.API.Controllers
                 Balance balance = _mapper.Map<Balance>(balanceDTO);
                 balanceService.EditBalance(balance);
                 return StatusCode(200, balanceDTO);
+
+                
+
+              
             }
             catch(Exception) { throw; }
         }
