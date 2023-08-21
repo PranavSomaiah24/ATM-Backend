@@ -23,14 +23,14 @@ namespace ATM_BS.API.Service
             try
             {
                 List<Transaction> transactions = (from e in _dbcontext.Transactions
-                                                  where e.AccountNumber == AccountNumber
+                                                  where e.FromAccountNumber == AccountNumber || e.ToAccountNumber == AccountNumber
                                                   select new Transaction()
                                                   {
-                                                      AccountNumber = e.AccountNumber,
-                                                      Type = e.Type,
-                                                      CardNumber = e.CardNumber,
+                                                      ToAccountNumber = e.ToAccountNumber,
+                                                      FromAccountBalance = e.FromAccountBalance,
+                                                      ToAccountBalance = e.ToAccountBalance,
+                                                      FromAccountNumber = e.FromAccountNumber,
                                                       TransactionTime = e.TransactionTime,
-                                                      Region = e.Region,
                                                       Amount = e.Amount,
                                                   }).ToList();
                 return transactions;

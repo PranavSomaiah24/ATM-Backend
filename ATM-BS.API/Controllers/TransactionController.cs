@@ -23,62 +23,103 @@ namespace ATM_BS.API.Controllers
             this._mapper = mapper;
         }
 
-        [HttpPost,Route("AddTransaction")]
+        [HttpPost, Route("AddTransaction")]
         public IActionResult AddTransaction(TransactionDTO transactionDTO)
         {
+
             try
             {
-                 /* Transaction transaction = new Transaction()
+                if (transactionDTO.FromAccountNumber == null && transactionDTO.ToAccountNumber == null)
                 {
-                    AccountNumber = transactionDTO.AccountNumber,
-                    Region = transactionDTO.Region,
-                    Type = transactionDTO.Type,
-                    CardNumber = transactionDTO.CardNumber,
-                    Amount = transactionDTO.Amount,
-                }; */
-
-               Transaction transaction = _mapper.Map<Transaction>(transactionDTO);
-                transactionService.AddTransaction(transaction);
-                Balance balance = balanceService.GetBalance(transactionDTO.AccountNumber);
-                
-                double val = balance.AccountBalance;
-                
-                val -= transactionDTO.Amount;
-                if(val< 0)
-                {
-                    throw new Exception("Insufficent Balance!");
+                    throw new Exception("Invalid transaction");
                 }
-                balance.AccountBalance -= transactionDTO.Amount;
-                balanceService.EditBalance(balance);
-                return StatusCode(200, transactionDTO);
+
+                Double val = 0;
+                Balance FromAccountBalance = new Balance();
+                Balance ToAccountBalance = new Balance();
+                if (transactionDTO.FromAccountNumber != null)
+                {
+                    FromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
+                    val = FromAccountBalance.AccountBalance;
+
+                    val -= transactionDTO.Amount;
+                    if (val < 0)
+                    {
+                        throw new Exception("Insufficent Balance!");
+                    }
+                }
+                if (transactionDTO.ToAccountNumber != null)
+                {
+                    ToAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
+                }
+
+                if (transactionDTO.FromAccountNumber != null)
+                {
+                    FromAccountBalance.AccountBalance -= transactionDTO.Amount;
+                    balanceService.EditBalance(FromAccountBalance);
+                }
+                if (transactionDTO.ToAccountNumber != null)
+                {
+                    ToAccountBalance.AccountBalance += transactionDTO.Amount;
+                    balanceService.EditBalance(ToAccountBalance);
+                }
+
+
+
+                Transaction transaction = new Transaction()
+                {
+                    TransactionId = new Guid(),
+                    FromAccountNumber = transactionDTO.FromAccountNumber,
+                    ToAccountNumber = transactionDTO.ToAccountNumber,
+                    Amount = transactionDTO.Amount,
+                    FromAccountBalance = FromAccountBalance.AccountBalance,
+                    ToAccountBalance = ToAccountBalance.AccountBalance,
+
+                    /*
+                    FromAccountNumber = (transactionDTO.FromAccountNumber!=null) ? transactionDTO.FromAccountNumber : null,
+                    ToAccountNumber = (transactionDTO.ToAccountNumber != null) ? transactionDTO.ToAccountNumber : null,
+                    FromAccountBalance = (transactionDTO.FromAccountNumber != null) ? FromAccountBalance.AccountBalance : null,
+                    ToAccountBalance = (transactionDTO.FromAccountNumber != null) ? ToAccountBalance.AccountBalance : null,
+                    */
+
+
+                };
+                // 
+                transactionService.AddTransaction(transaction);
+                TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<TransactionDisplayDTO>(transaction);
+                return StatusCode(200, transactionDisplayDTO);
             }
             catch (Exception) { throw; }
         }
 
-        [HttpGet, Route("GetTransactions/{AccountNumber}"),Authorize]
+        [HttpGet, Route("GetTransactions/{AccountNumber}"), Authorize]
         public IActionResult GetTransactions(int AccountNumber)
         {
-                List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
-                List<TransactionDTO> transactionsDTOs = new List<TransactionDTO>();
 
-                //foreach (Transaction transaction in  transactions) {
-                    //transactionsDTOs.Add(
-                         /* new TransactionDTO()
-                         {
-                             AccountNumber = transaction.AccountNumber,
-                             Type = transaction.Type,
-                             CardNumber = transaction.CardNumber,
-                             Amount = transaction.Amount,
-                             Region = transaction.Region,
-                         });*/
-                        transactionsDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
-            //}
-                try
-                {
-                    return StatusCode(200, transactionsDTOs);
-                }
-                catch(Exception) { throw;  }
-            
+
+            /*foreach (Transaction transaction in  transactions) {
+                /*transactionsDTOs.Add(
+                    new TransactionDTO()
+                    {
+                        AccountNumber = transaction.AccountNumber,
+                        Type = transaction.Type,
+                        CardNumber = transaction.CardNumber,
+                        Amount = transaction.Amount,
+                        Region = transaction.Region,
+                    });
+            TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<List<TransactionDisplayDTO>>(transaction);
+        }*/
+            try
+            {
+                List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
+                List<TransactionDisplayDTO> transactionsDisplayDTOs = new List<TransactionDisplayDTO>();
+                TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<List<TransactionDisplayDTO>>(transaction);
+
+                return StatusCode(200, transactionDisplayDTOs);
+            }
+            catch (Exception) { throw; }
+            return Ok(null);
+
         }
     }
 }

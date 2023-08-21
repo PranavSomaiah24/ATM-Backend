@@ -85,11 +85,8 @@ namespace ATM_BS.API.Controllers
                 balanceService.EditBalance(balance);
                 Transaction transaction = new Transaction()
                 {
-                    AccountNumber = depositDTO.AccountNumber,
-                    Type = "Deposit",
-                    CardNumber = 11111111,
+                    ToAccountNumber = depositDTO.AccountNumber,
                     TransactionTime = DateTime.Now,
-                    Region = "IND",
                     Amount = depositDTO.Amount
                 };
 

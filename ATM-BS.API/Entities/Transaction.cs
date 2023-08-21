@@ -16,8 +16,8 @@ namespace ATM_BS.API.Entities
         [Required]
         public double Amount;
         [Required]
-        public double FromAccountBalance;
+        public double? FromAccountBalance;
         [Required]
-        public double ToAccountBalance;
+        public double? ToAccountBalance;
     }
 }
