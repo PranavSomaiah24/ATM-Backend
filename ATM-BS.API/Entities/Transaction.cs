@@ -4,9 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ATM_BS.API.Entities
 {
-    [Keyless]
     public class Transaction
     {
+        [Key]
+       // public int Id { get; set; }
+        public int TId { get; set; }
         [Required]
         public int AccountNumber { get; set; }
         [Required]
