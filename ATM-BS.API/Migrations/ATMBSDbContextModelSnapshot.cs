@@ -105,6 +105,12 @@ namespace ATM_BS.API.Migrations
 
             modelBuilder.Entity("ATM_BS.API.Entities.Transaction", b =>
                 {
+                    b.Property<int>("TId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TId"), 1L, 1);
+
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");
 
@@ -113,14 +119,16 @@ namespace ATM_BS.API.Migrations
 
                     b.Property<string>("Region")
                         .IsRequired()
-                        .HasColumnType("varchar");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("TransactionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("varchar");
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("TId");
 
                     b.ToTable("Transactions");
                 });

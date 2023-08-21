@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATM_BS.API.Migrations
 {
     [DbContext(typeof(ATMBSDbContext))]
-    [Migration("20230811070911_migrationv1")]
-    partial class migrationv1
+    [Migration("20230818103546_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,11 +83,9 @@ namespace ATM_BS.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int?>("BalanceAccountNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Contact")
-                        .HasColumnType("int");
+                    b.Property<string>("Contact")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -102,20 +100,19 @@ namespace ATM_BS.API.Migrations
                     b.Property<int>("Pincode")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TransactionAccountNumber")
-                        .HasColumnType("int");
-
                     b.HasKey("CustomerId");
-
-                    b.HasIndex("BalanceAccountNumber");
-
-                    b.HasIndex("TransactionAccountNumber");
 
                     b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("ATM_BS.API.Entities.Transaction", b =>
                 {
+                    b.Property<int>("TId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TId"), 1L, 1);
+
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");
 
@@ -124,33 +121,18 @@ namespace ATM_BS.API.Migrations
 
                     b.Property<string>("Region")
                         .IsRequired()
-                        .HasColumnType("varchar");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("TransactionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("varchar");
+                        .HasColumnType("varchar(50)");
 
-                    b.HasKey("AccountNumber");
+                    b.HasKey("TId");
 
                     b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("ATM_BS.API.Entities.Customer", b =>
-                {
-                    b.HasOne("ATM_BS.API.Entities.Balance", "Balance")
-                        .WithMany()
-                        .HasForeignKey("BalanceAccountNumber");
-
-                    b.HasOne("ATM_BS.API.Entities.Transaction", "Transaction")
-                        .WithMany()
-                        .HasForeignKey("TransactionAccountNumber");
-
-                    b.Navigation("Balance");
-
-                    b.Navigation("Transaction");
                 });
 #pragma warning restore 612, 618
         }
