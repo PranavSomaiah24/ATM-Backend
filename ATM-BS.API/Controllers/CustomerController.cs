@@ -24,7 +24,7 @@ namespace ATM_BS.API.Controllers
 
         }
 
-        [HttpPost,Route("AddCustomer"),Authorize]
+        [HttpPost,Route("AddCustomer")]
         public IActionResult Add(CustomerDTO customerDTO)
         {
             Console.WriteLine(customerDTO);

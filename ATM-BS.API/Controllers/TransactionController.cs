@@ -34,10 +34,10 @@ namespace ATM_BS.API.Controllers
                     throw new Exception("Invalid transaction");
                 }
 
-                Double val = 0;
-                Balance FromAccountBalance = new Balance();
-                Balance ToAccountBalance = new Balance();
-                if (transactionDTO.FromAccountNumber != null)
+                //Double val = 0;
+                Balance fromAccountBalance = new Balance();
+                Balance toAccountBalance = new Balance();
+                /*if (transactionDTO.FromAccountNumber != null)
                 {
                     FromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
                     val = FromAccountBalance.AccountBalance;
@@ -62,18 +62,43 @@ namespace ATM_BS.API.Controllers
                 {
                     ToAccountBalance.AccountBalance += transactionDTO.Amount;
                     balanceService.EditBalance(ToAccountBalance);
+                }*/
+                if(transactionDTO.ToAccountNumber == null)
+                {
+                    fromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
+                    double val = fromAccountBalance.AccountBalance;
+                    if(val < transactionDTO.Amount)
+                    {
+                        throw new Exception("Insufficient balance");
+                    }
+                    fromAccountBalance.AccountBalance -= transactionDTO.Amount;
+                    balanceService.EditBalance(fromAccountBalance);
+                }
+                else if(transactionDTO.FromAccountNumber == null) {
+                    toAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
+                    toAccountBalance.AccountBalance += transactionDTO.Amount;
+                    balanceService.EditBalance(toAccountBalance);
+                }
+                else
+                {
+                    fromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
+                    toAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
+                    fromAccountBalance.AccountBalance -= transactionDTO.Amount;
+                    toAccountBalance.AccountBalance += transactionDTO.Amount;
+                    balanceService.EditBalance(fromAccountBalance);
+                    balanceService.EditBalance(toAccountBalance);
                 }
 
 
 
                 Transaction transaction = new Transaction()
                 {
-                    TransactionId = new Guid(),
+                    TransactionId = Guid.NewGuid(),
                     FromAccountNumber = transactionDTO.FromAccountNumber,
                     ToAccountNumber = transactionDTO.ToAccountNumber,
                     Amount = transactionDTO.Amount,
-                    FromAccountBalance = FromAccountBalance.AccountBalance,
-                    ToAccountBalance = ToAccountBalance.AccountBalance,
+                    FromAccountBalance = fromAccountBalance.AccountBalance,
+                    ToAccountBalance = toAccountBalance.AccountBalance,
 
                     /*
                     FromAccountNumber = (transactionDTO.FromAccountNumber!=null) ? transactionDTO.FromAccountNumber : null,
@@ -113,12 +138,11 @@ namespace ATM_BS.API.Controllers
             {
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
                 List<TransactionDisplayDTO> transactionsDisplayDTOs = new List<TransactionDisplayDTO>();
-                TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<List<TransactionDisplayDTO>>(transaction);
+                transactionsDisplayDTOs = _mapper.Map<List<TransactionDisplayDTO>>(transactions);
 
-                return StatusCode(200, transactionDisplayDTOs);
+                return StatusCode(200, transactionsDisplayDTOs);
             }
             catch (Exception) { throw; }
-            return Ok(null);
 
         }
     }
