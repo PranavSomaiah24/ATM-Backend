@@ -71,10 +71,6 @@ namespace ATM_BS.API.Controllers
                 Balance balance = _mapper.Map<Balance>(balanceDTO);
                 balanceService.EditBalance(balance);
                 return StatusCode(200, balanceDTO);
-
-                
-
-              
             }
             catch(Exception) { throw; }
         }
@@ -96,6 +92,7 @@ namespace ATM_BS.API.Controllers
                     Region = "IND",
                     Amount = depositDTO.Amount
                 };
+
                 transactionService.AddTransaction(transaction);
                 return StatusCode(200, balance);
             }

@@ -28,15 +28,16 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
-                 Transaction transaction = new Transaction()
+                 /* Transaction transaction = new Transaction()
                 {
                     AccountNumber = transactionDTO.AccountNumber,
                     Region = transactionDTO.Region,
                     Type = transactionDTO.Type,
                     CardNumber = transactionDTO.CardNumber,
                     Amount = transactionDTO.Amount,
-                }; 
-               // Transaction transaction = _mapper.Map<Transaction>(transactionDTO);
+                }; */
+
+               Transaction transaction = _mapper.Map<Transaction>(transactionDTO);
                 transactionService.AddTransaction(transaction);
                 Balance balance = balanceService.GetBalance(transactionDTO.AccountNumber);
                 
@@ -60,17 +61,18 @@ namespace ATM_BS.API.Controllers
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
                 List<TransactionDTO> transactionsDTOs = new List<TransactionDTO>();
 
-                foreach (Transaction transaction in  transactions) {
-                    transactionsDTOs.Add(
-                        new TransactionDTO()
-                        {
-                            AccountNumber = transaction.AccountNumber,
-                            Type = transaction.Type,
-                            CardNumber = transaction.CardNumber,
-                            Amount = transaction.Amount,
-                            Region = transaction.Region,
-                        });
-                }
+                //foreach (Transaction transaction in  transactions) {
+                    //transactionsDTOs.Add(
+                         /* new TransactionDTO()
+                         {
+                             AccountNumber = transaction.AccountNumber,
+                             Type = transaction.Type,
+                             CardNumber = transaction.CardNumber,
+                             Amount = transaction.Amount,
+                             Region = transaction.Region,
+                         });*/
+                        transactionsDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
+            //}
                 try
                 {
                     return StatusCode(200, transactionsDTOs);
