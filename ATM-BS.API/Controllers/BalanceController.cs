@@ -22,7 +22,6 @@ namespace ATM_BS.API.Controllers
             this._mapper = mapper;
         }
 
-
         [HttpPost,Route("AddBalance"),Authorize]
         public IActionResult AddBalance(BalanceDTO balanceDTO) { 
             try
