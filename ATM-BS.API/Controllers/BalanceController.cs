@@ -14,17 +14,15 @@ namespace ATM_BS.API.Controllers
         private readonly ITransactionService transactionService;
         private readonly IMapper _mapper;
 
-        public BalanceController(IBalanceService balanceService, ITransactionService transactionService)
+        public BalanceController(IBalanceService balanceService, ITransactionService transactionService, IMapper mapper)
         {
             //this.balanceService = balanceService;
             this.balanceService = balanceService;
             this.transactionService = transactionService;
+            this._mapper = mapper;
         }
 
-        public BalanceController(IMapper mapper)
-        {
-            _mapper = mapper;
-        }
+        
 
         [HttpPost,Route("AddBalance"),Authorize]
         public IActionResult AddBalance(BalanceDTO balanceDTO) { 
@@ -45,7 +43,7 @@ namespace ATM_BS.API.Controllers
             catch (Exception) { throw; }
         }
 
-        [HttpGet,Route("GetBalance/{accountNumber}"),Authorize]
+        [HttpGet,Route("GetBalance/{accountNumber}")]
         public IActionResult GetBalance(int accountNumber)
         {
             try
