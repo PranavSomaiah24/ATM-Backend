@@ -43,7 +43,7 @@ namespace ATM_BS.API.Controllers
             catch (Exception) { throw; }
         }
 
-        [HttpGet,Route("GetBalance/{accountNumber}")]
+        [HttpGet,Route("GetBalance/{accountNumber}"),Authorize]
         public IActionResult GetBalance(int accountNumber)
         {
             try
