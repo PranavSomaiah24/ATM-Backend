@@ -50,7 +50,7 @@ namespace ATM_BSUnitTest.UnitTesting
                 Pincode = 666666,
                 Email = "dhruva@gmail.com",
                 Contact = "9999999999",
-                AccountNumber = 87654321
+                AccountNumber = 87654321,
                 AccountPin = 4444
             },
             
