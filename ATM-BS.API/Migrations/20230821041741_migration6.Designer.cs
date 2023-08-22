@@ -4,6 +4,7 @@ using ATM_BS.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATM_BS.API.Migrations
 {
     [DbContext(typeof(ATMBSDbContext))]
-    partial class ATMBSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230821041741_migration6")]
+    partial class migration6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,8 +73,7 @@ namespace ATM_BS.API.Migrations
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AccountPin")
-                        .IsRequired()
+                    b.Property<int>("AccountPin")
                         .HasColumnType("int");
 
                     b.Property<string>("AccountType")
@@ -109,29 +110,30 @@ namespace ATM_BS.API.Migrations
 
             modelBuilder.Entity("ATM_BS.API.Entities.Transaction", b =>
                 {
-                    b.Property<Guid>("TransactionId")
+                    b.Property<int>("TId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<double>("FromAccountBalance")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("FromAccountNumber")
                         .HasColumnType("int");
 
-                    b.Property<double>("ToAccountBalance")
-                        .HasColumnType("float");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TId"), 1L, 1);
 
-                    b.Property<int?>("ToAccountNumber")
+                    b.Property<int>("AccountNumber")
                         .HasColumnType("int");
+
+                    b.Property<int>("CardNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("TransactionTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("TransactionId");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("TId");
 
                     b.ToTable("Transactions");
                 });

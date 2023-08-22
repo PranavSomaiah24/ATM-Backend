@@ -22,17 +22,17 @@ namespace ATM_BS.API.Service
         {
             try
             {
-                List<Transaction> transactions = (from e in _dbcontext.Transactions
-                                                  where e.AccountNumber == AccountNumber
+                List<Transaction> transactions = (List<Transaction>)(from e in _dbcontext.Transactions
+                                                  where e.FromAccountNumber == AccountNumber || e.ToAccountNumber == AccountNumber
                                                   select new Transaction()
                                                   {
-                                                      AccountNumber = e.AccountNumber,
-                                                      Type = e.Type,
-                                                      CardNumber = e.CardNumber,
+                                                      ToAccountNumber = e.ToAccountNumber,
+                                                      FromAccountBalance = e.FromAccountBalance,
+                                                      ToAccountBalance = e.ToAccountBalance,
+                                                      FromAccountNumber = e.FromAccountNumber,
                                                       TransactionTime = e.TransactionTime,
-                                                      Region = e.Region,
                                                       Amount = e.Amount,
-                                                  }).ToList();
+                                                  }).OrderBy(e => e.TransactionTime).ToList();
                 return transactions;
             }
             catch (Exception )

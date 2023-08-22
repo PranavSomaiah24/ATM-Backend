@@ -8,20 +8,16 @@ namespace ATM_BS.API.Entities
     {
         [Key]
        // public int Id { get; set; }
-        public int TId { get; set; }
-        [Required]
-        public int AccountNumber { get; set; }
-        [Required]
-        [Column(TypeName = "varchar(50)")]
-        public string Type { get; set; }
-        [Required]
-        public int CardNumber { get; set; }
+        public Guid TransactionId { get; set; }
+        public int? FromAccountNumber { get; set; }
+        public int? ToAccountNumber { get; set; }
         [Required]
         public DateTime TransactionTime { get; set; }
         [Required]
-        [Column(TypeName = "varchar(50)")]
-        public string Region { get; set; }
+        public double Amount { get; set; }
         [Required]
-        public double Amount;
+        public double FromAccountBalance { get; set; }
+        [Required]
+        public double ToAccountBalance { get; set; }
     }
 }
