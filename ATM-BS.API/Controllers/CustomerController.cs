@@ -129,7 +129,7 @@ namespace ATM_BS.API.Controllers
             catch (Exception) { throw; }
         }
 
-        [HttpPut,Route("ChangePin"),Authorize]
+        [HttpPut,Route("ChangePin")]
         public IActionResult ChangePin(PinDTO pinDTO)
         {
             try
