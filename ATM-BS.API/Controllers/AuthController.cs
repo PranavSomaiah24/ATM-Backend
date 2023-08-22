@@ -30,7 +30,7 @@ namespace ATM_BS.API.Controllers
         [HttpPost]
         public IActionResult Auth([FromBody] AuthRequest request)
         {
-            AuthResponse authResponse = null;
+            AuthResponse? authResponse = null;
             Admin? user = userService.Validate(request.Email, request.Password);
 
             if (user != null)

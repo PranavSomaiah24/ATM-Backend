@@ -14,10 +14,10 @@ namespace ATM_BS.API.Entities
         [Required]
         public DateTime TransactionTime { get; set; }
         [Required]
-        public double Amount;
+        public double Amount { get; set; }
         [Required]
-        public double? FromAccountBalance;
+        public double FromAccountBalance { get; set; }
         [Required]
-        public double? ToAccountBalance;
+        public double ToAccountBalance { get; set; }
     }
 }

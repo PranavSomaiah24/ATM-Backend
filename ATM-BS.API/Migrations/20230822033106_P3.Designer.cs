@@ -4,6 +4,7 @@ using ATM_BS.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ATM_BS.API.Migrations
 {
     [DbContext(typeof(ATMBSDbContext))]
-    partial class ATMBSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230822033106_P3")]
+    partial class P3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,17 +115,8 @@ namespace ATM_BS.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<double>("FromAccountBalance")
-                        .HasColumnType("float");
-
                     b.Property<int?>("FromAccountNumber")
                         .HasColumnType("int");
-
-                    b.Property<double>("ToAccountBalance")
-                        .HasColumnType("float");
 
                     b.Property<int?>("ToAccountNumber")
                         .HasColumnType("int");

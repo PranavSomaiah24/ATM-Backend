@@ -22,7 +22,7 @@ namespace ATM_BS.API.Service
         {
             try
             {
-                List<Transaction> transactions = (from e in _dbcontext.Transactions
+                List<Transaction> transactions = (List<Transaction>)(from e in _dbcontext.Transactions
                                                   where e.FromAccountNumber == AccountNumber || e.ToAccountNumber == AccountNumber
                                                   select new Transaction()
                                                   {
@@ -32,7 +32,7 @@ namespace ATM_BS.API.Service
                                                       FromAccountNumber = e.FromAccountNumber,
                                                       TransactionTime = e.TransactionTime,
                                                       Amount = e.Amount,
-                                                  }).ToList();
+                                                  }).OrderBy(e => e.TransactionTime).ToList();
                 return transactions;
             }
             catch (Exception )

@@ -24,7 +24,7 @@ namespace ATM_BS.API.Controllers
 
         }
 
-        [HttpPost,Route("AddCustomer")]
+        [HttpPost,Route("AddCustomer"),Authorize]
         public IActionResult Add(CustomerDTO customerDTO)
         {
             Console.WriteLine(customerDTO);
@@ -93,7 +93,7 @@ namespace ATM_BS.API.Controllers
             catch(Exception) { throw; }
         }
 
-        [HttpGet, Route("DeleteCustomer/{id}"), Authorize]
+        [HttpGet,Route("DeleteCustomer/{id}"),Authorize]
         public IActionResult DeleteCustomer(int id)
         {
             try

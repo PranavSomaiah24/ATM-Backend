@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using ATM_BS.API.Service;
-using ATM_BS.API.DTOS;
+﻿using ATM_BS.API.DTOS;
 using ATM_BS.API.Entities;
-using Microsoft.AspNetCore.Authorization;
+using ATM_BS.API.Service;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ATM_BS.API.Controllers
 {
@@ -23,7 +22,7 @@ namespace ATM_BS.API.Controllers
             this._mapper = mapper;
         }
 
-        [HttpPost, Route("AddTransaction")]
+        [HttpPost,Route("AddTransaction"),Authorize]
         public IActionResult AddTransaction(TransactionDTO transactionDTO)
         {
 
@@ -63,18 +62,19 @@ namespace ATM_BS.API.Controllers
                     ToAccountBalance.AccountBalance += transactionDTO.Amount;
                     balanceService.EditBalance(ToAccountBalance);
                 }*/
-                if(transactionDTO.ToAccountNumber == null)
+                if (transactionDTO.ToAccountNumber == null)
                 {
                     fromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
                     double val = fromAccountBalance.AccountBalance;
-                    if(val < transactionDTO.Amount)
+                    if (val < transactionDTO.Amount)
                     {
                         throw new Exception("Insufficient balance");
                     }
                     fromAccountBalance.AccountBalance -= transactionDTO.Amount;
                     balanceService.EditBalance(fromAccountBalance);
                 }
-                else if(transactionDTO.FromAccountNumber == null) {
+                else if (transactionDTO.FromAccountNumber == null)
+                {
                     toAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
                     toAccountBalance.AccountBalance += transactionDTO.Amount;
                     balanceService.EditBalance(toAccountBalance);
@@ -99,6 +99,7 @@ namespace ATM_BS.API.Controllers
                     Amount = transactionDTO.Amount,
                     FromAccountBalance = fromAccountBalance.AccountBalance,
                     ToAccountBalance = toAccountBalance.AccountBalance,
+                    TransactionTime = DateTime.Now,
 
                     /*
                     FromAccountNumber = (transactionDTO.FromAccountNumber!=null) ? transactionDTO.FromAccountNumber : null,
@@ -111,13 +112,14 @@ namespace ATM_BS.API.Controllers
                 };
                 // 
                 transactionService.AddTransaction(transaction);
-                TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<TransactionDisplayDTO>(transaction);
-                return StatusCode(200, transactionDisplayDTO);
+                //TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<TransactionDisplayDTO>(transaction);
+                return StatusCode(200, transaction);
             }
-            catch (Exception) { throw; }
+            //catch (Exception ex) { return StatusCode(415, ex.Message); }
+            catch(Exception) { throw; }
         }
 
-        [HttpGet, Route("GetTransactions/{AccountNumber}"), Authorize]
+        [HttpGet,Route("GetTransactions/{AccountNumber}"),Authorize]
         public IActionResult GetTransactions(int AccountNumber)
         {
 
@@ -137,10 +139,8 @@ namespace ATM_BS.API.Controllers
             try
             {
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
-                List<TransactionDisplayDTO> transactionsDisplayDTOs = new List<TransactionDisplayDTO>();
-                transactionsDisplayDTOs = _mapper.Map<List<TransactionDisplayDTO>>(transactions);
 
-                return StatusCode(200, transactionsDisplayDTOs);
+                return StatusCode(200, transactions.Skip(transactions.Count - 5));
             }
             catch (Exception) { throw; }
 
