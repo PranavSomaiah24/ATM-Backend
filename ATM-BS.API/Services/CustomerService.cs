@@ -12,10 +12,11 @@ namespace ATM_BS.API.Service
             _dbcontext = dbcontext;
         }
 
-        public void AddCustomer(Customer customer)
+        public Customer AddCustomer(Customer customer)
         {
-            _dbcontext.Customers.Add(customer);
+            var result = _dbcontext.Customers.Add(customer);
             _dbcontext.SaveChanges();
+            return result.Entity;
         }
 
         public void DeleteCustomer(Customer customer)

@@ -13,10 +13,11 @@ namespace ATM_BS.API.Service
             _dbcontext = dbcontext;
         }
 
-        public void AddAdmin(Admin admin)
+        public Admin AddAdmin(Admin admin)
         {
-            _dbcontext.Admins.Add(admin); //save records to the Admins table
+           var result =  _dbcontext.Admins.Add(admin); //save records to the Admins table
             _dbcontext.SaveChanges();
+            return result.Entity;
         }
         public Admin? Validate(string username, string password)
         {

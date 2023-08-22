@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATM-BS.API", "ATM-BS.API\ATM-BS.API.csproj", "{F58E67AB-F717-45E6-A45B-DAC4C904D333}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATM-BS.API", "ATM-BS.API\ATM-BS.API.csproj", "{F58E67AB-F717-45E6-A45B-DAC4C904D333}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATM-BSUnitTest", "ATM-BSUnitTest\ATM-BSUnitTest.csproj", "{8B70CB2A-B5B3-461C-89FF-954DECC5DFB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F58E67AB-F717-45E6-A45B-DAC4C904D333}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F58E67AB-F717-45E6-A45B-DAC4C904D333}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F58E67AB-F717-45E6-A45B-DAC4C904D333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B70CB2A-B5B3-461C-89FF-954DECC5DFB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B70CB2A-B5B3-461C-89FF-954DECC5DFB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B70CB2A-B5B3-461C-89FF-954DECC5DFB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B70CB2A-B5B3-461C-89FF-954DECC5DFB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
