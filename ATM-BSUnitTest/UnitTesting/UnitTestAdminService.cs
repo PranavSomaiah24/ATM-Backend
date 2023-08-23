@@ -33,7 +33,7 @@ namespace ATM_BSUnitTest.UnitTesting
 
             adminService = new AdminService(db);
             
-            //admin = adminService.AddAdmin(admin);
+            admin = adminService.AddAdmin(admin);
             Assert.NotNull(admin);
 
             admin = adminService.Validate(admin.Name, admin.Password);
