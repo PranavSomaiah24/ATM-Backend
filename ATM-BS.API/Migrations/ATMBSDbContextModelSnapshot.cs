@@ -47,7 +47,7 @@ namespace ATM_BS.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("ATM_BS.API.Entities.Balance", b =>
@@ -60,7 +60,7 @@ namespace ATM_BS.API.Migrations
 
                     b.HasKey("AccountNumber");
 
-                    b.ToTable("Balances");
+                    b.ToTable("Balances", (string)null);
                 });
 
             modelBuilder.Entity("ATM_BS.API.Entities.Customer", b =>
@@ -103,7 +103,7 @@ namespace ATM_BS.API.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ATM_BS.API.Entities.Transaction", b =>
@@ -132,7 +132,7 @@ namespace ATM_BS.API.Migrations
 
                     b.HasKey("TransactionId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 #pragma warning restore 612, 618
         }
