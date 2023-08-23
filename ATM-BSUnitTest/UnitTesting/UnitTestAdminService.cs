@@ -5,7 +5,7 @@ using ATM_BS.API.Entities;
 using ATM_BS.API.Data;
 using ATM_BS.API.Service;
 using Microsoft.EntityFrameworkCore;
-
+using ATM_BSUnitTest.UnitTesting;
 namespace ATM_BSUnitTest.UnitTesting
 {
     public class UnitTestAdminService
@@ -15,8 +15,9 @@ namespace ATM_BSUnitTest.UnitTesting
         private AdminService? adminService;
         public UnitTestAdminService()
         {
-            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer("Data Source=WINDOWS-BVQNF6J;Initial Catalog=bank;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True").Options;
-            //dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseInMemoryDatabase(dbName).Options;
+
+            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer(Variables.ConnectionString).Options;
+           // dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseInMemoryDatabase(dbName).Options;
             db = new ATMBSDbContext(dbContextOptions);
         }
 
@@ -25,10 +26,11 @@ namespace ATM_BSUnitTest.UnitTesting
         {
             Admin admin = new Admin
             {
-                Id = 111111,
+                Id = 222222,
                 Name = "Stephen",
                 Email = "stephen@gmail.com",
-                Password = "Abc@1234"
+                Password = "Abc@1234",
+                Enable = true,
             };
 
             adminService = new AdminService(db);

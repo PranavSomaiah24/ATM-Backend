@@ -24,7 +24,9 @@ namespace ATM_BSUnitTest.UnitTesting
         private CustomerService? customerService;
         public UnitTestCustomerService()
         {
-            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer("Data Source=WINDOWS-BVQNF6J;Initial Catalog=bank;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True").Options;
+            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer(Variables.ConnectionString).Options;
+
+            // dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer("Data Source=WINDOWS-BVQNF6J;Initial Catalog=bank;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True").Options;
             //dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseInMemoryDatabase(dbName).Options;
             db = new ATMBSDbContext(dbContextOptions);
         }
