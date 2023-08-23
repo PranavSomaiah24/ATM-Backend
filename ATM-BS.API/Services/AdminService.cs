@@ -23,5 +23,19 @@ namespace ATM_BS.API.Service
         {
             return _dbcontext.Admins.SingleOrDefault(u => u.Name == username && u.Password == password);
         }
+        public List<Admin> GetAdmins()
+        {
+            return _dbcontext.Admins.ToList();
+        }
+        public Admin GetAdmin(int id)
+        {
+            Admin admin = _dbcontext.Admins.Find(id);
+            return admin;
+        }
+        public void EditAdmin(Admin admin)
+        {
+            _dbcontext.Admins.Update(admin);
+            _dbcontext.SaveChanges();
+        }
     }
 }

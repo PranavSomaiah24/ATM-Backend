@@ -60,7 +60,8 @@ namespace ATM_BS.API.Controllers
                     Id = adminDTO.Id,
                     Name = adminDTO.Name,
                     Email = adminDTO.Email,
-                    Password = adminDTO.Password
+                    Password = adminDTO.Password,
+                    Enable = true
 
                 };
                 adminService.AddAdmin(admin);
@@ -71,6 +72,30 @@ namespace ATM_BS.API.Controllers
             {
                 throw;
             }
+        }
+
+        [HttpGet,Route("GetAdmins"),AllowAnonymous]
+        public IActionResult GetAdmins()
+        {
+            try
+            {
+                var admins = adminService.GetAdmins();
+                return StatusCode(200, admins);
+            }
+            catch(Exception) { throw; }
+        }
+
+        [HttpPut,Route("ToggleAdmin/{adminId}"),AllowAnonymous]
+        public IActionResult ToggleAdmin(int adminId)
+        {
+            try
+            {
+                Admin admin = adminService.GetAdmin(adminId);
+                admin.Enable = !admin.Enable;
+                adminService.EditAdmin(admin);
+                return StatusCode(200, admin);
+            }
+            catch(Exception) { throw; }
         }
 
         private string GetToken(Admin? user)
