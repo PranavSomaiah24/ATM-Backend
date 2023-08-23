@@ -23,7 +23,7 @@ namespace ATM_BS.API.DTOS
         [RegularExpression("[6-9][0-9]{9}",ErrorMessage = "Phone number must be in Indian format")]
         public string Contact { get; set; }
         [Required(ErrorMessage = "EAccount Number is required")]
-        [RegularExpression("[0-9]{8}", ErrorMessage = "Account Number should be 12 digits long")]
+        [RegularExpression("[0-9]{8}", ErrorMessage = "Account Number should be 8 digits long")]
         public int AccountNumber { get; set; }
     }
 }

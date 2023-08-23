@@ -38,7 +38,7 @@ namespace ATM_BS.API.Entities
         public int AccountNumber { get; set; }
 
         [Required]
-        public int? AccountPin { get; set; }
+        public int AccountPin { get; set; }
 
     }
 }
