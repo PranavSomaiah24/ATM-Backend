@@ -26,6 +26,9 @@ namespace ATM_BS.API.Entities
         [Column(TypeName = "varchar")]
         [StringLength(50)]
         public string Password { get; set; }
+        
+        [Required]
+        public Boolean Enable { get; set; }
 
     }
 }
