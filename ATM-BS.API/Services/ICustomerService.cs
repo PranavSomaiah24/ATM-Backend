@@ -4,7 +4,7 @@ namespace ATM_BS.API.Service
 {
     public interface ICustomerService
     {
-        void AddCustomer(Customer customer);
+        Customer AddCustomer(Customer customer);
         void DeleteCustomer(Customer customer);
         List<Customer> GetCustomers();
         Customer GetCustomer(int CustomerId);
