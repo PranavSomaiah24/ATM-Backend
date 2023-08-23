@@ -36,6 +36,7 @@ namespace ATM_BSUnitTest.UnitTesting
             admin = adminService.AddAdmin(admin);
             Assert.NotNull(admin);
 
+
             admin = adminService.Validate(admin.Name, admin.Password);
             Assert.NotNull(admin);
             admin = adminService.Validate("ygciyg","Abc@1234");

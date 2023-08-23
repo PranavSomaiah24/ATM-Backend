@@ -4,7 +4,7 @@ using ATM_BS.API.Entities;
 using ATM_BS.API.Service;
 
 
-namespace ATM_BSUnitTest
+namespace ATM_BSUnitTest.UnitTesting
 {
     public class UnitTestTransactionService
     {
