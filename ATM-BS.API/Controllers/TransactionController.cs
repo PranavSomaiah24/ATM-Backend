@@ -86,6 +86,19 @@ namespace ATM_BS.API.Controllers
             catch(Exception) { throw; }
         }
 
+        [HttpGet, Route("GetAllTransactions/{AccountNumber}"), Authorize]
+        public IActionResult GetAllTransactions(int AccountNumber)
+        {
+            try
+            {
+                List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
+
+                return StatusCode(200, transactions);
+            }
+            catch (Exception) { throw; }
+
+        }
+
         [HttpGet,Route("GetTransactions/{AccountNumber}"),Authorize]
         public IActionResult GetTransactions(int AccountNumber)
         {
