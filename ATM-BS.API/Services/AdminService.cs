@@ -37,5 +37,6 @@ namespace ATM_BS.API.Service
             _dbcontext.Admins.Update(admin);
             _dbcontext.SaveChanges();
         }
+
     }
 }

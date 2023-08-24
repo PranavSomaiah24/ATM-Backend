@@ -25,8 +25,8 @@ namespace ATM_BSUnitTest.UnitTesting
         {
             Admin admin = new Admin
             {
-                Id = 222222,
-                Name = "Stephen",
+                Id = 222292,
+                Name = "Sutfe",
                 Email = "stephen@gmail.com",
                 Password = "Abc@1234",
                 Enable = true,
@@ -37,11 +37,39 @@ namespace ATM_BSUnitTest.UnitTesting
             admin = adminService.AddAdmin(admin);
             Assert.NotNull(admin);
 
-            admin = adminService.Validate(admin.Name, admin.Password);
-            Assert.NotNull(admin);
+            Admin admin2 = adminService.Validate(admin.Name, admin.Password);
+            Assert.NotNull(admin2);
+
+            db.Admins.Remove(admin);
+            db.SaveChanges();
+            
+            
             admin = adminService.Validate("ygciyg","Abc@1234");
             Assert.Null(admin);
 
+        }
+
+        [Fact]
+        public void TestGetAdmin() {
+            Admin admin = new Admin
+            {
+                Id = 222292,
+                Name = "Sutfe",
+                Email = "stephen@gmail.com",
+                Password = "Abc@1234",
+                Enable = true,
+            };
+
+            adminService = new AdminService(db);
+
+            admin = adminService.AddAdmin(admin);
+            Assert.NotNull(admin);
+
+            Admin admin2 = adminService.GetAdmin(admin.Id);
+            Assert.Equal(admin2, admin);
+
+            db.Admins.Remove(admin);
+            db.SaveChanges();
         }
 
         private List<Admin> GetAdminsData()
