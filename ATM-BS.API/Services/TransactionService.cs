@@ -31,6 +31,7 @@ namespace ATM_BS.API.Service
                                                       ToAccountBalance = e.ToAccountBalance,
                                                       FromAccountNumber = e.FromAccountNumber,
                                                       TransactionTime = e.TransactionTime,
+                                                      TransactionId = e.TransactionId,
                                                       Amount = e.Amount,
                                                   }).OrderBy(e => e.TransactionTime).ToList();
                 return transactions;
