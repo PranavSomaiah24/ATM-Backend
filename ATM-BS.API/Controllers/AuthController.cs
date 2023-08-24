@@ -74,7 +74,7 @@ namespace ATM_BS.API.Controllers
             }
         }
 
-        [HttpGet,Route("GetAdmins"),AllowAnonymous]
+        [HttpGet,Route("GetAdmins"),Authorize]
         public IActionResult GetAdmins()
         {
             try
@@ -85,7 +85,7 @@ namespace ATM_BS.API.Controllers
             catch(Exception) { throw; }
         }
 
-        [HttpPut,Route("ToggleAdmin/{adminId}"),AllowAnonymous]
+        [HttpPut,Route("ToggleAdmin/{adminId}"), Authorize]
         public IActionResult ToggleAdmin(int adminId)
         {
             try

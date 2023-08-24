@@ -6,6 +6,6 @@ namespace ATM_BS.API.Service
     {
         void AddTransaction(Transaction transaction);
         List<Transaction> GetTransactions(int AccountNumber);
-        //Transaction GetTransaction(long AccountNumber);
+        List<Transaction> GetTransactionsForPeriod(int AccountNumber, DateTime StartPoint, DateTime EndPoint);
     }
 }

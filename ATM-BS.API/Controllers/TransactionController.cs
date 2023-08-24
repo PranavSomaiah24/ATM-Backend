@@ -36,32 +36,7 @@ namespace ATM_BS.API.Controllers
                 //Double val = 0;
                 Balance fromAccountBalance = new Balance();
                 Balance toAccountBalance = new Balance();
-                /*if (transactionDTO.FromAccountNumber != null)
-                {
-                    FromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
-                    val = FromAccountBalance.AccountBalance;
-
-                    val -= transactionDTO.Amount;
-                    if (val < 0)
-                    {
-                        throw new Exception("Insufficent Balance!");
-                    }
-                }
-                if (transactionDTO.ToAccountNumber != null)
-                {
-                    ToAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
-                }
-
-                if (transactionDTO.FromAccountNumber != null)
-                {
-                    FromAccountBalance.AccountBalance -= transactionDTO.Amount;
-                    balanceService.EditBalance(FromAccountBalance);
-                }
-                if (transactionDTO.ToAccountNumber != null)
-                {
-                    ToAccountBalance.AccountBalance += transactionDTO.Amount;
-                    balanceService.EditBalance(ToAccountBalance);
-                }*/
+                
                 if (transactionDTO.ToAccountNumber == null)
                 {
                     fromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
@@ -101,13 +76,6 @@ namespace ATM_BS.API.Controllers
                     ToAccountBalance = toAccountBalance.AccountBalance,
                     TransactionTime = DateTime.Now,
 
-                    /*
-                    FromAccountNumber = (transactionDTO.FromAccountNumber!=null) ? transactionDTO.FromAccountNumber : null,
-                    ToAccountNumber = (transactionDTO.ToAccountNumber != null) ? transactionDTO.ToAccountNumber : null,
-                    FromAccountBalance = (transactionDTO.FromAccountNumber != null) ? FromAccountBalance.AccountBalance : null,
-                    ToAccountBalance = (transactionDTO.FromAccountNumber != null) ? ToAccountBalance.AccountBalance : null,
-                    */
-
 
                 };
                 // 
@@ -115,27 +83,25 @@ namespace ATM_BS.API.Controllers
                 //TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<TransactionDisplayDTO>(transaction);
                 return StatusCode(200, transaction);
             }
-            //catch (Exception ex) { return StatusCode(415, ex.Message); }
             catch(Exception) { throw; }
+        }
+
+        [HttpGet, Route("GetAllTransactions/{AccountNumber}"), Authorize]
+        public IActionResult GetAllTransactions(int AccountNumber)
+        {
+            try
+            {
+                List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
+
+                return StatusCode(200, transactions);
+            }
+            catch (Exception) { throw; }
+
         }
 
         [HttpGet,Route("GetTransactions/{AccountNumber}"),Authorize]
         public IActionResult GetTransactions(int AccountNumber)
         {
-
-
-            /*foreach (Transaction transaction in  transactions) {
-                /*transactionsDTOs.Add(
-                    new TransactionDTO()
-                    {
-                        AccountNumber = transaction.AccountNumber,
-                        Type = transaction.Type,
-                        CardNumber = transaction.CardNumber,
-                        Amount = transaction.Amount,
-                        Region = transaction.Region,
-                    });
-            TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<List<TransactionDisplayDTO>>(transaction);
-        }*/
             try
             {
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
@@ -144,6 +110,21 @@ namespace ATM_BS.API.Controllers
             }
             catch (Exception) { throw; }
 
+        }
+
+        [HttpGet,Route("GetTransactionsForPeriod"),Authorize]
+        public IActionResult GetTransactionsForPeriod(TransactionPeriodDTO transactionPeriodDTO)
+        {
+            try
+            {
+                var accountNumber = transactionPeriodDTO.AccountNumber;
+                var startPoint = transactionPeriodDTO.StartPoint;
+                var endPoint = transactionPeriodDTO.EndPoint;
+                List<Transaction> transactions = transactionService.GetTransactionsForPeriod(accountNumber, startPoint, endPoint);
+
+                return StatusCode(200, transactions);
+            }
+            catch(Exception) { throw; }
         }
     }
 }

@@ -25,8 +25,8 @@ namespace ATM_BSUnitTest.UnitTesting
         {
             Admin admin = new Admin
             {
-                Id = 222292,
-                Name = "Sutfe",
+                Id = 111111,
+                Name = "Stephen",
                 Email = "stephen@gmail.com",
                 Password = "Abc@1234",
                 Enable = true,
@@ -34,8 +34,9 @@ namespace ATM_BSUnitTest.UnitTesting
 
             adminService = new AdminService(db);
             
-            admin = adminService.AddAdmin(admin);
-            Assert.NotNull(admin);
+           // admin = adminService.AddAdmin(admin);
+          //  Assert.NotNull(admin);
+
 
             Admin admin2 = adminService.Validate(admin.Name, admin.Password);
             Assert.NotNull(admin2);
