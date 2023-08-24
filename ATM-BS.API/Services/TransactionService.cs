@@ -42,7 +42,27 @@ namespace ATM_BS.API.Service
             }
         }
 
-
+        public List<Transaction> GetTransactionsForPeriod(int AccountNumber, DateTime StartPoint, DateTime EndPoint)
+        {
+            try
+            {
+                List<Transaction> transactions = (List<Transaction>)(from e in _dbcontext.Transactions
+                                                                     where (e.FromAccountNumber == AccountNumber || e.ToAccountNumber == AccountNumber)
+                                                                     && (e.TransactionTime >= StartPoint && e.TransactionTime <= EndPoint)
+                                                                     select new Transaction()
+                                                                     {
+                                                                         ToAccountNumber = e.ToAccountNumber,
+                                                                         FromAccountBalance = e.FromAccountBalance,
+                                                                         ToAccountBalance = e.ToAccountBalance,
+                                                                         FromAccountNumber = e.FromAccountNumber,
+                                                                         TransactionTime = e.TransactionTime,
+                                                                         TransactionId = e.TransactionId,
+                                                                         Amount = e.Amount,
+                                                                     }).OrderBy(e => e.TransactionTime).ToList();
+                return transactions;
+            }
+            catch (Exception ) { throw; }
+        }
 
 
         //public Transaction GetTransaction(long AccountNumber)
