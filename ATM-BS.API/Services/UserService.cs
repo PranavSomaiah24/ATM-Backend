@@ -13,7 +13,7 @@ namespace ATM_BS.API.Services
         }
         public Admin? Validate(string email, string password)
         {
-            return _dbcontext.Admins.SingleOrDefault(u => u.Email == email && u.Password == password);
+            return _dbcontext.Admins.SingleOrDefault(u => u.Email == email && u.Password == password && u.Enable == true);
         }
     }
 }
