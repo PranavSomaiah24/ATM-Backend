@@ -24,11 +24,11 @@ namespace ATM_BSUnitTest.UnitTesting
         private CustomerService? customerService;
         public UnitTestCustomerService()
         {
+            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer(Variables.ConnectionString).Options;
 
-            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer("Data Source=WINDOWS-BVQNF6J;Initial Catalog=bank;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True").Options;
+            // dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer("Data Source=WINDOWS-BVQNF6J;Initial Catalog=bank;Persist Security Info=True;User ID=sa;Password=12345;TrustServerCertificate=True").Options;
             //dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseInMemoryDatabase(dbName).Options;
             db = new ATMBSDbContext(dbContextOptions);
-
         }
 
         [Fact]
@@ -50,68 +50,16 @@ namespace ATM_BSUnitTest.UnitTesting
             customerService = new CustomerService(db);
 
             customerService.AddCustomer(customer);
-            /*
             customer = customerService.GetCustomer(customer.CustomerId);
             Assert.NotNull(customer);
+            
             customerService.DeleteCustomer(customer);
             customer = customerService.GetCustomer(customer.CustomerId);
-            */
-           // Assert.Null(customer);
+            Assert.Null(customer);
 
         }
-
-
-
-
+        
         /*
-        private readonly Mock<ICustomerService> customerService;
-        public UnitTestCustomerService()
-        {
-            customerService = new Mock<ICustomerService>();
-        }
-
-        [Fact]
-        public void Test_AddCustomer()
-        {
-            var customer = new Customer
-            {
-                CustomerId = 101010,
-                CustomerName = "Ajay",
-                AccountType = "Savings",
-                Address = "Hyderabad",
-                Pincode = 222222,
-                Email = "ajay@gmail.com",
-                Contact = "8888888888",
-                AccountNumber = 45454545,
-                AccountPin = 4444
-            };
-            var customerList = GetCustomersData();
-            customerList.Add(customer);
-            customerService.Setup(x => x.AddCustomer(customer)).Returns(customerList[2]);
-            var result = customerService.Object;
-            var customerResult = result.AddCustomer(customerList[2]);
-            Assert.NotNull(customerResult);
-            Assert.NotEqual(customerList[0].CustomerId, customerResult.CustomerId);
-            Assert.True(customerList[2].Email == customerResult.Email);
-
-        }
-
-        [Fact]
-
-        
-        public void Test_DeleteCustomer()
-        {
-            var customerList = GetCustomersData();
-            customerService.Setup(x => x.DeleteCustomer(2))
-                .Returns(true);
-            var result = customerService.Object; //moq service
-            //act
-            var customerResult = result.DeleteCustomer(2);
-            //assert
-            Assert.True(customerResult);
-        }
-        
-
         private List<Customer> GetCustomersData()
         {
             List<Customer> customersData = new List<Customer>

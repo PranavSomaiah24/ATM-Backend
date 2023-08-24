@@ -2,39 +2,47 @@ using Moq;
 using ATM_BS.API.Controllers;
 using ATM_BS.API.Services;
 using ATM_BS.API.Entities;
-
+using ATM_BS.API.Data;
+using ATM_BS.API.Service;
+using Microsoft.EntityFrameworkCore;
 namespace ATM_BSUnitTest.UnitTesting
 {
     public class UnitTestAdminService
     {
-        //private readonly Mock<IadminService> adminService;
-        private readonly Mock<IAdminService> adminService;
+        private DbContextOptions<ATMBSDbContext> dbContextOptions;
+        private ATMBSDbContext db;
+        private AdminService? adminService;
         public UnitTestAdminService()
         {
-            adminService = new Mock<IAdminService>();
+
+            dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseSqlServer(Variables.ConnectionString).Options;
+           // dbContextOptions = new DbContextOptionsBuilder<ATMBSDbContext>().UseInMemoryDatabase(dbName).Options;
+            db = new ATMBSDbContext(dbContextOptions);
         }
 
         [Fact]
-        public void Test_AddAdmin()
+        public void TestAdmin()
         {
-            var admin = new Admin
+            Admin admin = new Admin
             {
-                Id = 123456,
-                Name = "John",
-                Email = "john@gmail.com",
-                Password = "Abc@1234"
+                Id = 222222,
+                Name = "Stephen",
+                Email = "stephen@gmail.com",
+                Password = "Abc@1234",
+                Enable = true,
             };
-            var adminList = GetAdminsData();
-            adminList.Add(admin);
-            adminService.Setup(x => x.AddAdmin(admin)).Returns(adminList[3]);
-            var result = adminService.Object;
-            var adminResult = result.AddAdmin(adminList[3]);
-            Assert.NotNull(adminResult);
-            Assert.NotEqual(adminList[2].Id, adminResult.Id);
-            Assert.True(adminList[3].Id == adminResult.Id);
+
+            adminService = new AdminService(db);
+            
+            admin = adminService.AddAdmin(admin);
+            Assert.NotNull(admin);
+
+            admin = adminService.Validate(admin.Name, admin.Password);
+            Assert.NotNull(admin);
+            admin = adminService.Validate("ygciyg","Abc@1234");
+            Assert.Null(admin);
 
         }
-
 
         private List<Admin> GetAdminsData()
         {
