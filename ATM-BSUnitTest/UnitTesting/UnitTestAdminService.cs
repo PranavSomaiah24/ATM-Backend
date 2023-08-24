@@ -5,7 +5,6 @@ using ATM_BS.API.Entities;
 using ATM_BS.API.Data;
 using ATM_BS.API.Service;
 using Microsoft.EntityFrameworkCore;
-using ATM_BSUnitTest.UnitTesting;
 namespace ATM_BSUnitTest.UnitTesting
 {
     public class UnitTestAdminService
