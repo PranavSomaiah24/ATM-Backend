@@ -16,10 +16,12 @@ namespace ATM_BS.API.Controllers
 
         class BalanceException : Exception
         {
-            public override string Message
-            {
-                get { return "Failed to Initiate Minimum Balance"; }
-            }
+            public BalanceException() { }
+            public BalanceException(string message) : base(message) { }
+            //public override string Message
+            //{
+            //    get { return "Failed to Initiate Minimum Balance"; }
+            //}
             public string GetErrMessage
             {
                 get { return "Failed to Fetch Balance"; }
@@ -48,6 +50,12 @@ namespace ATM_BS.API.Controllers
                      AccountBalance = balanceDTO.AccountBalance
                  }; */
 
+                Balance check = balanceService.GetBalance(balanceDTO.AccountNumber);
+                if(check != null)
+                {
+                    throw new BalanceException("Balance record already exists");
+                }
+
                 Balance balance = _mapper.Map<Balance>(balanceDTO);
                 balanceService.AddBalance(balance);
 
@@ -66,6 +74,10 @@ namespace ATM_BS.API.Controllers
             try
             {
                 Balance balance = balanceService.GetBalance(accountNumber);
+                if(balance == null)
+                {
+                    throw new BalanceException();
+                }
                 /* BalanceDTO balanceDTO = new BalanceDTO()
                 {
                     AccountNumber = balance.AccountNumber,
@@ -90,13 +102,18 @@ namespace ATM_BS.API.Controllers
                     AccountNumber = balanceDTO.AccountNumber,
                     AccountBalance = balanceDTO.AccountBalance
                 }; */
+                Balance check = balanceService.GetBalance(balanceDTO.AccountNumber);
+                if(check == null)
+                {
+                    throw new BalanceException("Account number doesn't exist");
+                }
                 Balance balance = _mapper.Map<Balance>(balanceDTO);
                 balanceService.EditBalance(balance);
                 return StatusCode(200, balanceDTO);
             }
             catch(BalanceException ex)
             {
-                return StatusCode(400, ex.EditErrMessage);
+                return StatusCode(400, ex.Message);
             }
         }
 

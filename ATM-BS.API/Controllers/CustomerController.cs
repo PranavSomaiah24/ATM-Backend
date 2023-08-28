@@ -33,10 +33,10 @@ namespace ATM_BS.API.Controllers
             {
                 
             }
-            public override string Message
-            {
-                get { return "Failed to Register Customer"; }
-            }
+            //public override string Message
+            //{
+            //    get { return "Failed to Register Customer"; }
+            //}
             public string GetErrMessage
             {
                 get { return "Failed to Fetch Customer"; }
@@ -64,6 +64,12 @@ namespace ATM_BS.API.Controllers
             {
                 Random _rdm = new Random();
 
+                Customer check = customerService.GetCustomer(customerDTO.CustomerID);
+                if(check != null)
+                {
+                    throw new CustomerException("CustomerID already exists");
+                }
+
                 Customer customer = _mapper.Map<Customer>(customerDTO);
                 customer.AccountPin = _rdm.Next(1000, 9999);
                 customerService.AddCustomer(customer);
@@ -89,6 +95,10 @@ namespace ATM_BS.API.Controllers
             try
             {
                 Customer customer = customerService.GetCustomer(id);
+                if(customer  == null)
+                {
+                    throw new CustomerException();
+                }
                 Balance balance = balanceService.GetBalance(customer.AccountNumber);
                 
                 CustomerDTO customerDTO = _mapper.Map<CustomerDTO>(customer);
@@ -107,6 +117,10 @@ namespace ATM_BS.API.Controllers
             try
             {
                 Customer customer = customerService.GetCustomer(id);
+                if(customer == null)
+                {
+                    throw new CustomerException();
+                }
                 customerService.DeleteCustomer(customer);
                 return StatusCode(200);
             }
@@ -121,6 +135,12 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
+                Customer check = customerService.GetCustomer(customerDTO.CustomerID);
+                if(check == null)
+                {
+                    throw new CustomerException();
+                }
+
                 Customer customer = _mapper.Map<Customer>(customerDTO);
 
                 customerService.EditCustomer(customer);
@@ -138,6 +158,10 @@ namespace ATM_BS.API.Controllers
             try
             {
                 Customer customer = customerService.GetCustomer(pinDTO.CustomerId);
+                if(customer == null)
+                {
+                    throw new CustomerException("Customer doesn't exist");
+                }
                 if(customer.AccountPin != pinDTO.OldAccountPin)
                 {
                     throw new CustomerException("Old Account Pin does not match");
@@ -148,7 +172,7 @@ namespace ATM_BS.API.Controllers
             }
             catch(CustomerException ex)
             {
-                return StatusCode(400, ex.PinErrMessage);
+                return StatusCode(400, ex.Message);
             }
         }
     }

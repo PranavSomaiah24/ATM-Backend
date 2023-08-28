@@ -22,10 +22,10 @@ namespace ATM_BS.API.Controllers
             }
 
             public TransactionException(string message) : base(message) { }
-            public override string Message
-            {
-                get { return "Transaction Failed"; }
-            }
+            //public override string Message
+            //{
+            //    get { return "Transaction Failed"; }
+            //}
             public string GetErrMessage
             {
                 get { return "Failed to Fetch Transaction(s)"; }
@@ -51,7 +51,7 @@ namespace ATM_BS.API.Controllers
             {
                 if (transactionDTO.FromAccountNumber == null && transactionDTO.ToAccountNumber == null)
                 {
-                    throw new TransactionException();
+                    throw new TransactionException("Transaction failed");
                 }
 
                 //Double val = 0;
@@ -61,6 +61,10 @@ namespace ATM_BS.API.Controllers
                 if (transactionDTO.ToAccountNumber == null)
                 {
                     fromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
+                    if(fromAccountBalance == null)
+                    {
+                        throw new TransactionException("Invalid A/C number to withdraw from");
+                    }
                     double val = fromAccountBalance.AccountBalance;
                     if (val < transactionDTO.Amount)
                     {
@@ -72,14 +76,30 @@ namespace ATM_BS.API.Controllers
                 else if (transactionDTO.FromAccountNumber == null)
                 {
                     toAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
+                    if(toAccountBalance == null)
+                    {
+                        throw new TransactionException("Invalid A/C number to deposit to");
+                    }
                     toAccountBalance.AccountBalance += transactionDTO.Amount;
                     balanceService.EditBalance(toAccountBalance);
                 }
                 else
                 {
                     fromAccountBalance = balanceService.GetBalance(transactionDTO.FromAccountNumber.Value);
+                    if(fromAccountBalance == null)
+                    {
+                        throw new TransactionException("Invalid sender A/C number");
+                    }
                     toAccountBalance = balanceService.GetBalance(transactionDTO.ToAccountNumber.Value);
+                    if(toAccountBalance == null)
+                    {
+                        throw new TransactionException("Invalid receiver A/C number");
+                    }
                     fromAccountBalance.AccountBalance -= transactionDTO.Amount;
+                    if(fromAccountBalance.AccountBalance < 0)
+                    {
+                        throw new TransactionException("Insufficient balance");
+                    }
                     toAccountBalance.AccountBalance += transactionDTO.Amount;
                     balanceService.EditBalance(fromAccountBalance);
                     balanceService.EditBalance(toAccountBalance);
@@ -115,6 +135,12 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
+                Balance check = balanceService.GetBalance(AccountNumber);
+                if(check == null)
+                {
+                    throw new TransactionException();
+                }
+
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
 
                 return StatusCode(200, transactions);
@@ -128,6 +154,12 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
+                Balance check = balanceService.GetBalance(AccountNumber);
+                if (check == null)
+                {
+                    throw new TransactionException();
+                }
+
                 List<Transaction> transactions = transactionService.GetTransactions(AccountNumber);
 
                 return StatusCode(200, transactions.Skip(transactions.Count - 5));
@@ -144,6 +176,13 @@ namespace ATM_BS.API.Controllers
                 var accountNumber = transactionPeriodDTO.AccountNumber;
                 var startPoint = transactionPeriodDTO.StartPoint;
                 var endPoint = transactionPeriodDTO.EndPoint;
+
+                Balance check = balanceService.GetBalance(accountNumber);
+                if (check == null)
+                {
+                    throw new TransactionException();
+                }
+
                 List<Transaction> transactions = transactionService.GetTransactionsForPeriod(accountNumber, startPoint, endPoint);
 
                 return StatusCode(200, transactions);
@@ -151,11 +190,17 @@ namespace ATM_BS.API.Controllers
             catch(TransactionException ex) { return StatusCode(400, ex.GetErrMessage); }
         }
 
-        [HttpGet,Route("GetCheques/{AccontNumber}"),Authorize]
+        [HttpGet,Route("GetCheques/{AccountNumber}"),Authorize]
         public IActionResult GetCheques(int AccountNumber)
         {
             try
             {
+                Balance check = balanceService.GetBalance(AccountNumber);
+                if (check == null)
+                {
+                    throw new TransactionException();
+                }
+
                 List<ChequeDTO> cheques = transactionService.GetChequeDeposits(AccountNumber);
 
                 return StatusCode(200, cheques);

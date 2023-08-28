@@ -21,10 +21,12 @@ namespace ATM_BS.API.Controllers
 
         class AuthException : Exception
         {
-            public override string Message
-            {
-                get { return "Auth Failed"; }
-            }
+            public AuthException() { }
+            public AuthException(string message) : base(message) { }
+            //public override string Message
+            //{
+            //    get { return "Auth Failed"; }
+            //}
             public string RegErrMessage
             {
                 get { return "Registration Failed"; }
@@ -65,7 +67,7 @@ namespace ATM_BS.API.Controllers
                 }
                 else
                 {
-                    throw new AuthException();
+                    throw new AuthException("Auth failed");
                 }
 
                 return StatusCode(200, authResponse);
@@ -83,6 +85,17 @@ namespace ATM_BS.API.Controllers
             //Console.WriteLine(adminDTO);
             try
             {
+                Admin check1 = userService.CheckEmail(adminDTO.Email);
+                if(check1 != null)
+                {
+                    throw new AuthException("Admin with email already exists");
+                }
+                Admin check2 = userService.CheckId(adminDTO.Id);
+                if(check2 != null)
+                {
+                    throw new AuthException("Admin with Id already exists");
+                }
+
                 Admin admin = new Admin()
                 {
                     Id = adminDTO.Id,
@@ -98,7 +111,7 @@ namespace ATM_BS.API.Controllers
             }
             catch (AuthException ex)
             {
-                return StatusCode(400, ex.RegErrMessage);
+                return StatusCode(400, ex.Message);
             }
         }
 

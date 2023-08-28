@@ -15,5 +15,13 @@ namespace ATM_BS.API.Services
         {
             return _dbcontext.Admins.SingleOrDefault(u => u.Email == email && u.Password == password && u.Enable == true);
         }
+        public Admin? CheckEmail(string email)
+        {
+            return _dbcontext.Admins.SingleOrDefault(u => u.Email == email);
+        }
+        public Admin? CheckId(int id)
+        {
+            return _dbcontext.Admins.SingleOrDefault(u => u.Id == id);
+        }
     }
 }
