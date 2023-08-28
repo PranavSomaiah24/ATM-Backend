@@ -19,9 +19,9 @@ namespace ATM_BS.API.Service
             _dbcontext.SaveChanges();
             return result.Entity;
         }
-        public Admin? Validate(string username, string password)
+        public Admin? Validate(string email, string password)
         {
-            return _dbcontext.Admins.SingleOrDefault(u => u.Name == username && u.Password == password);
+            return _dbcontext.Admins.SingleOrDefault(u => u.Email == email && u.Password == password && u.Enable == true);
         }
         public List<Admin> GetAdmins()
         {
@@ -37,6 +37,13 @@ namespace ATM_BS.API.Service
             _dbcontext.Admins.Update(admin);
             _dbcontext.SaveChanges();
         }
-
+        public Admin? CheckEmail(string email)
+        {
+            return _dbcontext.Admins.SingleOrDefault(u => u.Email == email);
+        }
+        public Admin? CheckId(int id)
+        {
+            return _dbcontext.Admins.SingleOrDefault(u => u.Id == id);
+        }
     }
 }

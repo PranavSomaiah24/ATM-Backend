@@ -9,5 +9,7 @@ namespace ATM_BS.API.Services
         List<Admin> GetAdmins();
         Admin GetAdmin(int id);
         void EditAdmin(Admin admin);
+        Admin? CheckEmail(string email);
+        Admin? CheckId(int id);
     }
 }

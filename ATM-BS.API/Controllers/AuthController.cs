@@ -16,7 +16,7 @@ namespace ATM_BS.API.Controllers
     public class AuthController : ControllerBase
     {
         IConfiguration configuration;
-        private readonly IUserService userService;
+        //private readonly IUserService userService;
         private readonly IAdminService adminService;
 
         class AuthException : Exception
@@ -37,10 +37,10 @@ namespace ATM_BS.API.Controllers
             }
         }
 
-        public AuthController(IConfiguration configuration, IUserService userService, IAdminService adminService)
+        public AuthController(IConfiguration configuration, IAdminService adminService)
         {
             this.configuration = configuration;
-            this.userService = userService;
+            //this.userService = userService;
             this.adminService = adminService;
         }
 
@@ -51,7 +51,7 @@ namespace ATM_BS.API.Controllers
             try
             {
                 AuthResponse? authResponse = null;
-                Admin? user = userService.Validate(request.Email, request.Password);
+                Admin? user = adminService.Validate(request.Email, request.Password);
 
                 if (user != null)
                 {
@@ -85,12 +85,12 @@ namespace ATM_BS.API.Controllers
             //Console.WriteLine(adminDTO);
             try
             {
-                Admin check1 = userService.CheckEmail(adminDTO.Email);
+                Admin check1 = adminService.CheckEmail(adminDTO.Email);
                 if(check1 != null)
                 {
                     throw new AuthException("Admin with email already exists");
                 }
-                Admin check2 = userService.CheckId(adminDTO.Id);
+                Admin check2 = adminService.CheckId(adminDTO.Id);
                 if(check2 != null)
                 {
                     throw new AuthException("Admin with Id already exists");

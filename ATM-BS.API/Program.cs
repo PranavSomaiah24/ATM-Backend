@@ -39,7 +39,7 @@ namespace ATM_BS.API
                                   });
             });
 
-            builder.Services.AddScoped<IUserService, UserService>();
+            //builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddControllers();
 
             builder.Services.AddAuthentication(options =>
