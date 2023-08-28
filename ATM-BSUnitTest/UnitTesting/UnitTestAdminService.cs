@@ -23,10 +23,10 @@ namespace ATM_BSUnitTest.UnitTesting
         [Fact]
         public void TestAdmin()
         {
-            Admin admin = new Admin
+            Admin? admin = new Admin
             {
-                Id = 111111,
-                Name = "Stephen",
+                Id = 112211,
+                Name = "Stepen",
                 Email = "stephen@gmail.com",
                 Password = "Abc@1234",
                 Enable = true,
@@ -34,12 +34,15 @@ namespace ATM_BSUnitTest.UnitTesting
 
             adminService = new AdminService(db);
             
-           // admin = adminService.AddAdmin(admin);
-          //  Assert.NotNull(admin);
+            admin = adminService.AddAdmin(admin);
+            Assert.NotNull(admin);
 
 
-            Admin admin2 = adminService.Validate(admin.Name, admin.Password);
+            Admin? admin2 = adminService.Validate(admin.Name, admin.Password);
             Assert.NotNull(admin2);
+
+            admin2 = adminService.GetAdmin(admin.Id);
+            Assert.Equal(admin, admin2);
 
             db.Admins.Remove(admin);
             db.SaveChanges();

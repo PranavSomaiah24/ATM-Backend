@@ -58,6 +58,31 @@ namespace ATM_BSUnitTest.UnitTesting
             Assert.Null(customer);
 
         }
+
+        [Fact]
+        public void TestDeleteCustomer()
+        {
+            Customer customer = new Customer
+            {
+                CustomerId = 101010,
+                CustomerName = "Ajay",
+                AccountType = "Savings",
+                Address = "Hyderabad",
+                Pincode = 222222,
+                Email = "ajay@gmail.com",
+                Contact = "8888888888",
+                AccountNumber = 45454545,
+                AccountPin = 4444,
+            };
+
+            customerService = new CustomerService(db);
+
+            customerService.AddCustomer(customer);
+            customerService.DeleteCustomer(customer);
+            customer = customerService.GetCustomer(customer.CustomerId);
+            Assert.Null(customer);
+
+        }
         
         /*
         private List<Customer> GetCustomersData()
