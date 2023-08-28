@@ -15,6 +15,27 @@ namespace ATM_BS.API.Controllers
         private readonly IBalanceService balanceService;
         private readonly IMapper _mapper;
 
+        class TransactionException : Exception 
+        {
+            public TransactionException()
+            {
+            }
+
+            public TransactionException(string message) : base(message) { }
+            public override string Message
+            {
+                get { return "Transaction Failed"; }
+            }
+            public string GetErrMessage
+            {
+                get { return "Failed to Fetch Transaction(s)"; }
+            }
+            public string ChequeErrMessage
+            {
+                get { return "Failed to Fetch Cheque(s)"; }
+            }
+        }
+
         public TransactionController(ITransactionService transactionService, IBalanceService balanceService, IMapper mapper)
         {
             this.transactionService = transactionService;
@@ -30,7 +51,7 @@ namespace ATM_BS.API.Controllers
             {
                 if (transactionDTO.FromAccountNumber == null && transactionDTO.ToAccountNumber == null)
                 {
-                    throw new Exception("Invalid transaction");
+                    throw new TransactionException();
                 }
 
                 //Double val = 0;
@@ -43,7 +64,7 @@ namespace ATM_BS.API.Controllers
                     double val = fromAccountBalance.AccountBalance;
                     if (val < transactionDTO.Amount)
                     {
-                        throw new Exception("Insufficient balance");
+                        throw new TransactionException("Insufficient balance");
                     }
                     fromAccountBalance.AccountBalance -= transactionDTO.Amount;
                     balanceService.EditBalance(fromAccountBalance);
@@ -83,7 +104,10 @@ namespace ATM_BS.API.Controllers
                 //TransactionDisplayDTO transactionDisplayDTO = _mapper.Map<TransactionDisplayDTO>(transaction);
                 return StatusCode(200, transaction);
             }
-            catch(Exception) { throw; }
+            catch(TransactionException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
         }
 
         [HttpGet, Route("GetAllTransactions/{AccountNumber}"), Authorize]
@@ -95,7 +119,7 @@ namespace ATM_BS.API.Controllers
 
                 return StatusCode(200, transactions);
             }
-            catch (Exception) { throw; }
+            catch (TransactionException ex) { return StatusCode(400, ex.GetErrMessage); }
 
         }
 
@@ -108,7 +132,7 @@ namespace ATM_BS.API.Controllers
 
                 return StatusCode(200, transactions.Skip(transactions.Count - 5));
             }
-            catch (Exception) { throw; }
+            catch (TransactionException ex) { return StatusCode(400, ex.GetErrMessage); }
 
         }
 
@@ -124,7 +148,22 @@ namespace ATM_BS.API.Controllers
 
                 return StatusCode(200, transactions);
             }
-            catch(Exception) { throw; }
+            catch(TransactionException ex) { return StatusCode(400, ex.GetErrMessage); }
+        }
+
+        [HttpGet,Route("GetCheques/{AccontNumber}"),Authorize]
+        public IActionResult GetCheques(int AccountNumber)
+        {
+            try
+            {
+                List<ChequeDTO> cheques = transactionService.GetChequeDeposits(AccountNumber);
+
+                return StatusCode(200, cheques);
+            }
+            catch(TransactionException ex)
+            {
+                return StatusCode(400, ex.ChequeErrMessage);
+            }
         }
     }
 }

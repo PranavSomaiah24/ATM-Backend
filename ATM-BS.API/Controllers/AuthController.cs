@@ -19,6 +19,22 @@ namespace ATM_BS.API.Controllers
         private readonly IUserService userService;
         private readonly IAdminService adminService;
 
+        class AuthException : Exception
+        {
+            public override string Message
+            {
+                get { return "Auth Failed"; }
+            }
+            public string RegErrMessage
+            {
+                get { return "Registration Failed"; }
+            }
+            public string ToggleErrMessage
+            {
+                get { return "Failed to Toggle Admin Status"; }
+            }
+        }
+
         public AuthController(IConfiguration configuration, IUserService userService, IAdminService adminService)
         {
             this.configuration = configuration;
@@ -30,29 +46,41 @@ namespace ATM_BS.API.Controllers
         [HttpPost]
         public IActionResult Auth([FromBody] AuthRequest request)
         {
-            AuthResponse? authResponse = null;
-            Admin? user = userService.Validate(request.Email, request.Password);
-
-            if (user != null)
+            try
             {
-                string jwtToken = GetToken(user);
-                authResponse = new AuthResponse()
+                AuthResponse? authResponse = null;
+                Admin? user = userService.Validate(request.Email, request.Password);
+
+                if (user != null)
                 {
-                    Email = user.Email,
-                    Token = jwtToken
+                    string jwtToken = GetToken(user);
+                    authResponse = new AuthResponse()
+                    {
+                        Email = user.Email,
+                        Token = jwtToken
 
-                };
+                    };
 
 
+                }
+                else
+                {
+                    throw new AuthException();
+                }
+
+                return StatusCode(200, authResponse);
             }
-
-            return StatusCode(200, authResponse);
+            catch (AuthException ex)
+            {
+                //throw new Exception(ex.Message);
+                return StatusCode(401, ex.Message);
+            }
         }
 
         [HttpPost, Route("AddAdmin")]
         public IActionResult Add(AdminDTO adminDTO)
         {
-            Console.WriteLine(adminDTO);
+            //Console.WriteLine(adminDTO);
             try
             {
                 Admin admin = new Admin()
@@ -68,9 +96,9 @@ namespace ATM_BS.API.Controllers
                 return StatusCode(200, adminDTO);
 
             }
-            catch (Exception)
+            catch (AuthException ex)
             {
-                throw;
+                return StatusCode(400, ex.RegErrMessage);
             }
         }
 
@@ -95,7 +123,10 @@ namespace ATM_BS.API.Controllers
                 adminService.EditAdmin(admin);
                 return StatusCode(200, admin);
             }
-            catch(Exception) { throw; }
+            catch(AuthException ex)
+            {
+                return StatusCode(400, ex.ToggleErrMessage);
+            }
         }
 
         private string GetToken(Admin? user)

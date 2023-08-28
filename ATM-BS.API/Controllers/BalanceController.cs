@@ -14,6 +14,22 @@ namespace ATM_BS.API.Controllers
         private readonly ITransactionService transactionService;
         private readonly IMapper _mapper;
 
+        class BalanceException : Exception
+        {
+            public override string Message
+            {
+                get { return "Failed to Initiate Minimum Balance"; }
+            }
+            public string GetErrMessage
+            {
+                get { return "Failed to Fetch Balance"; }
+            }
+            public string EditErrMessage
+            {
+                get { return "Failed to Update Balance"; }
+            }
+        }
+
         public BalanceController(IBalanceService balanceService, ITransactionService transactionService, IMapper mapper)
         {
             //this.balanceService = balanceService;
@@ -38,7 +54,10 @@ namespace ATM_BS.API.Controllers
                 return StatusCode(200, balanceDTO);
                 
             }
-            catch (Exception) { throw; }
+            catch (BalanceException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
         }
 
         [HttpGet,Route("GetBalance/{accountNumber}"),Authorize]
@@ -55,7 +74,10 @@ namespace ATM_BS.API.Controllers
                 BalanceDTO balanceDTO = _mapper.Map<BalanceDTO>(balance);
                 return StatusCode(200, balanceDTO);
             }
-            catch (Exception) { throw; }
+            catch (BalanceException ex)
+            {
+                return StatusCode(400, ex.GetErrMessage);
+            }
         }
 
         [HttpPut,Route("EditBalance"),Authorize]
@@ -72,9 +94,18 @@ namespace ATM_BS.API.Controllers
                 balanceService.EditBalance(balance);
                 return StatusCode(200, balanceDTO);
             }
-            catch(Exception) { throw; }
+            catch(BalanceException ex)
+            {
+                return StatusCode(400, ex.EditErrMessage);
+            }
         }
 
+        /*
+            this route is not being used for cheque-deposit
+            cheque-deposit is being implemented in the transaction handler
+            fromAccountNumber: null
+            toAccountNumber: AccountNumber
+        */
         [HttpPut,Route("ChequeDeposit"),Authorize]
         public IActionResult ChequeDeposit(DepositDTO depositDTO)
         {

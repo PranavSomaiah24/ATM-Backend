@@ -21,7 +21,38 @@ namespace ATM_BS.API.Controllers
             this.customerService = customerService; 
             this.balanceService = balanceService;
             this._mapper = mapper;
+        }
 
+        class CustomerException : Exception
+        {
+            public CustomerException()
+            {
+                
+            }
+            public CustomerException(string message) : base(message)
+            {
+                
+            }
+            public override string Message
+            {
+                get { return "Failed to Register Customer"; }
+            }
+            public string GetErrMessage
+            {
+                get { return "Failed to Fetch Customer"; }
+            }
+            public string DeleteErrMessage
+            {
+                get { return "Failed to Delete Customer"; }
+            }
+            public string EditErrMessage
+            {
+                get { return "Failed to Edit Customer"; }
+            }
+            public string PinErrMessage
+            {
+                get { return "Failed to Change Pin"; }
+            }
         }
 
         [HttpPost,Route("AddCustomer"),Authorize]
@@ -31,18 +62,6 @@ namespace ATM_BS.API.Controllers
             System.Diagnostics.Debug.WriteLine(customerDTO);
             try
             {
-                /* Customer customer = new Customer()
-                {
-                    CustomerId = customerDTO.CustomerID,
-                    CustomerName = customerDTO.CustomerName,
-                    AccountType = customerDTO.AccountType,
-                    AccountNumber = customerDTO.AccountNumber,
-                    Address = customerDTO.Address,
-                    Pincode = customerDTO.Pincode,
-                    Email = customerDTO.Email,
-                    Contact = customerDTO.Contact,
-                }; */
-
                 Random _rdm = new Random();
 
                 Customer customer = _mapper.Map<Customer>(customerDTO);
@@ -57,12 +76,10 @@ namespace ATM_BS.API.Controllers
                 balanceService.AddBalance(balance);
 
                 return StatusCode(200, customer);
-                
-
             }
-            catch (Exception)
+            catch (CustomerException ex)
             {
-                throw;
+                return StatusCode(400, ex.Message);
             }
         }
 
@@ -73,24 +90,15 @@ namespace ATM_BS.API.Controllers
             {
                 Customer customer = customerService.GetCustomer(id);
                 Balance balance = balanceService.GetBalance(customer.AccountNumber);
-                /* CustomerAndBalanceDTO customerDTO = new CustomerAndBalanceDTO()
-                 {
-                     CustomerID = customer.CustomerId,
-                     CustomerName = customer.CustomerName,
-                     AccountType = customer.AccountType,
-                     Address = customer.Address,
-                     Pincode = customer.Pincode,
-                     Email = customer.Email,
-                     Contact = customer.Contact,
-                     AccountNumber = customer.AccountNumber,
-                     AccountBalance = balance.AccountBalance
-                 }; */
                 
                 CustomerDTO customerDTO = _mapper.Map<CustomerDTO>(customer);
                 BalanceDTO balanceDTO = _mapper.Map<BalanceDTO>(balance);
                 return StatusCode(200, customerDTO);
             }
-            catch(Exception) { throw; }
+            catch(CustomerException ex)
+            {
+                return StatusCode(400, ex.GetErrMessage);
+            }
         }
 
         [HttpDelete,Route("DeleteCustomer/{id}"),Authorize]
@@ -102,7 +110,10 @@ namespace ATM_BS.API.Controllers
                 customerService.DeleteCustomer(customer);
                 return StatusCode(200);
             }
-            catch (Exception) { throw; }
+            catch (CustomerException ex)
+            {
+                return StatusCode(400, ex.DeleteErrMessage);
+            }
         }
 
         [HttpPut,Route("EditCustomer"),Authorize]
@@ -110,23 +121,15 @@ namespace ATM_BS.API.Controllers
         {
             try
             {
-                /* Customer customer = new Customer()
-                {
-                    CustomerId = customerDTO.CustomerID,
-                    CustomerName = customerDTO.CustomerName,
-                    AccountType = customerDTO.AccountType,
-                    Address = customerDTO.Address,
-                    Pincode = customerDTO.Pincode,
-                    Email = customerDTO.Email,
-                    Contact = customerDTO.Contact,
-                    AccountNumber = customerDTO.AccountNumber,
-                }; */
                 Customer customer = _mapper.Map<Customer>(customerDTO);
 
                 customerService.EditCustomer(customer);
                 return StatusCode(200, customerDTO);
             }
-            catch (Exception) { throw; }
+            catch (CustomerException ex)
+            {
+                return StatusCode(400, ex.EditErrMessage);
+            }
         }
 
         [HttpPut,Route("ChangePin")]
@@ -137,13 +140,16 @@ namespace ATM_BS.API.Controllers
                 Customer customer = customerService.GetCustomer(pinDTO.CustomerId);
                 if(customer.AccountPin != pinDTO.OldAccountPin)
                 {
-                    throw new Exception("Old Account Pin does not match");
+                    throw new CustomerException("Old Account Pin does not match");
                 }
                 customer.AccountPin = pinDTO.NewAccountPin;
                 customerService.EditCustomer(customer);
                 return StatusCode(200, pinDTO);
             }
-            catch(Exception) { throw; }
+            catch(CustomerException ex)
+            {
+                return StatusCode(400, ex.PinErrMessage);
+            }
         }
     }
 }

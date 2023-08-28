@@ -1,4 +1,5 @@
-﻿using ATM_BS.API.Entities;
+﻿using ATM_BS.API.DTOS;
+using ATM_BS.API.Entities;
 
 namespace ATM_BS.API.Service
 {
@@ -7,5 +8,6 @@ namespace ATM_BS.API.Service
         void AddTransaction(Transaction transaction);
         List<Transaction> GetTransactions(int AccountNumber);
         List<Transaction> GetTransactionsForPeriod(int AccountNumber, DateTime StartPoint, DateTime EndPoint);
+        List<ChequeDTO> GetChequeDeposits(int AccountNumber);
     }
 }
