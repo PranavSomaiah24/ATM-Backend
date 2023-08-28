@@ -9,5 +9,6 @@ namespace ATM_BS.API.Service
         List<Customer> GetCustomers();
         Customer GetCustomer(int CustomerId);
         void EditCustomer(Customer customer);
+        List<Customer> GetAllCustomers();
     }
 }

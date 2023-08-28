@@ -42,6 +42,10 @@ namespace ATM_BS.API.Service
             return customer;
         }
 
-
+        public List<Customer> GetAllCustomers()
+        {
+            List<Customer> customers = _dbcontext.Customers.ToList();
+            return customers;
+        }
     }
 }

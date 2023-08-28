@@ -152,7 +152,7 @@ namespace ATM_BS.API.Controllers
             }
         }
 
-        [HttpPut,Route("ChangePin")]
+        [HttpPut,Route("ChangePin"),Authorize]
         public IActionResult ChangePin(PinDTO pinDTO)
         {
             try
@@ -173,6 +173,20 @@ namespace ATM_BS.API.Controllers
             catch(CustomerException ex)
             {
                 return StatusCode(400, ex.Message);
+            }
+        }
+
+        [HttpGet,Route("GetAllCustomers"),Authorize]
+        public IActionResult GetAllCustomers()
+        {
+            try
+            {
+                List<Customer> customers = customerService.GetAllCustomers();
+                return StatusCode(200, customers);
+            } 
+            catch(CustomerException ex)
+            {
+                return StatusCode(400, ex.GetErrMessage);
             }
         }
     }
