@@ -141,7 +141,19 @@ namespace ATM_BS.API.Controllers
                     throw new CustomerException();
                 }
 
-                Customer customer = _mapper.Map<Customer>(customerDTO);
+                //Customer customer = _mapper.Map<Customer>(customerDTO);
+                Customer customer = new Customer()
+                {
+                    CustomerId = customerDTO.CustomerID,
+                    CustomerName = customerDTO.CustomerName,
+                    AccountType = customerDTO.AccountType,
+                    Address = customerDTO.Address,
+                    Pincode = customerDTO.Pincode,
+                    Email = customerDTO.Email,
+                    Contact = customerDTO.Contact,
+                    AccountNumber = customerDTO.AccountNumber,
+                    AccountPin = check.AccountPin
+                };
 
                 customerService.EditCustomer(customer);
                 return StatusCode(200, customerDTO);

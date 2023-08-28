@@ -27,7 +27,9 @@ namespace ATM_BS.API.Service
 
         public void EditCustomer(Customer customer)
         {
-            _dbcontext.Customers.Update(customer);
+            //_dbcontext.Customers.Update(customer);
+            var prev = _dbcontext.Customers.Find(customer.CustomerId);
+            _dbcontext.Entry(prev).CurrentValues.SetValues(customer);
             _dbcontext.SaveChanges();
         }
 
